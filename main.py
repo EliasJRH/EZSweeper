@@ -1,37 +1,7 @@
-import colorsys
 import pyautogui as pag
 import time
 import webbrowser
-
-# block width: 25px
-# block height: 25px
-
-# Grass pixel 1 = (162, 209, 73)
-# Grass pixel 2 = (185, 221, 119)
-
-# Flag = (242, 54, 7)
-
-GRASS = set({(162, 209, 73), (185, 221, 119), (191, 225, 125), (170, 215, 81)})
-
-IGNORE = set({(162, 209, 73), (185, 221, 119), (191, 225, 125),
-             (170, 215, 81), (215, 184, 153), (229, 194, 159), (242, 54, 7)})
-
-FLAG = (242, 54, 7)
-
-COLORS = {
-    (25, 118, 210): 1,
-    (56, 142, 60): 2,
-    (211, 47, 47): 3,
-    (123, 31, 162): 4,
-    (255, 143, 0): 5,
-    (0, 151, 167): 6,
-    (66, 66, 66): 7,
-    (160, 155, 152): 8
-}
-
-TO_SEARCH = [[-25, -25], [0, -25], [25, -25],
-             [-25, 0], [25, 0], [-25, 25], [0, 25], [25, 25]]
-
+from consts import *
 
 def open_minesweeper():
     webbrowser.open(
@@ -68,6 +38,7 @@ def count_adj_tiles(x, y):
         pag.moveTo(x, y)
     return data
 
+
 def flag_adj_tiles(x, y):
     for c in TO_SEARCH:
         pag.move(c[0], c[1])
@@ -77,11 +48,13 @@ def flag_adj_tiles(x, y):
             pag.click(button='right')
         pag.moveTo(x, y)
 
+
 def click_adj_tiles(x, y):
     for c in TO_SEARCH:
         pag.move(c[0], c[1])
         pag.click(button='left')
         pag.moveTo(x, y)
+
 
 def process():
     # pag.PAUSE = 1
