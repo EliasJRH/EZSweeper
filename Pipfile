@@ -14,4 +14,5 @@ autopep8 = "*"
 python_version = "3.9"
 
 [scripts]
-main = "pipenv run python main.py"
+main = "python main.py"
+format = "pipenv run autopep8 *.py --in-place"
