@@ -71,6 +71,9 @@ def click_adj_tiles(x, y):
 
 
 def play():
+    # pag.PAUSE = 1
+    pag.PAUSE = 0
+
     T = copy.deepcopy(TILES)
 
     # TODO:
@@ -140,8 +143,6 @@ def play():
 
 
 def main():
-    # pag.PAUSE = 1
-    pag.PAUSE = 0
     open_minesweeper()
     select_difficulty()
     start_game()
