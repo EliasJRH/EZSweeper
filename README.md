@@ -1,3 +1,3 @@
 # EZSweeper
 
-Idk a minesweeper got ig
+Idk a minesweeper bot ig
