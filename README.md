@@ -33,9 +33,5 @@ If you want to make any changes to the bot for yourself, you can easily format f
 
 `pipenv run format`
 
-## Progress tracking
-(Will add more as I make more progress)
-
-[3/21/2022](https://www.youtube.com/watch?v=JWdDPhJPtN0)
 
 \* This project was tested on an Asus VG278 1920x1080 resolution monitor. I see no reason why this shouldn't work on other monitors with the same resolution but at this point, it shouldn't work on other resolutions.
