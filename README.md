@@ -29,7 +29,7 @@ You should be able to run the bot right after completing the steps above. Run th
 `pipenv run main`
 
 ## Misc
-If you want to make any changes to the bot for yourself, you can easily format files following autopep8 with the following command
+If you want to make any changes to the bot for yourself, you can easily format files using [black](https://github.com/psf/black) with the following command
 
 `pipenv run format`
 
