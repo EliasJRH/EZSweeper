@@ -7,6 +7,8 @@ name = "pypi"
 pyautogui = "*"
 pillow = "*"
 autopep8 = "*"
+python3-pip-autoremove = "*"
+black = "*"
 
 [dev-packages]
 
@@ -15,4 +17,4 @@ python_version = "3.9"
 
 [scripts]
 main = "python main.py"
-format = "pipenv run autopep8 *.py --in-place"
+format = "pipenv run black *.py"

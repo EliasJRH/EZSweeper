@@ -1,8 +1,5 @@
 import pyautogui
 import consts
-
-#664, 370
-
 while True:
     print(pyautogui.position())
     x = int(input())
