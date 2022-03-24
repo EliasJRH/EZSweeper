@@ -17,8 +17,8 @@ Ok, now we can move the mouse and we know where to move it, what next? Well we n
 
 Clearly there's a lot that can be improved upon here, so here some solutions:
 1. Instead of taking a screenshot of the entire screen, I can take a screenshot of just the one square using `pyautogui.screenshot(region=)`. Now we're not grabbing the entire screen
-2. Once I have this small screen shot, I can use the `PIL.image.getcolors()` function to obtain an unsorted list of every color in screenshot (which would be at max 23x23 pixels wide, not very big relatively speaking).
-3. Once I get the colors, I can filter out the faded edges of the number to get the most dominate colors for each tile. This would either be just the background color, just the grass color or a combination of background and number.
+2. Once I have this small screen shot, I can use the `PIL.image.getcolors()` function to obtain an unsorted list of every distinct color in screenshot along with their pixel frequency (which would be at max 23x23 pixels wide, not very big relatively speaking).
+3. Once I get the colors, I can filter out the faded edges of the number by removing the lower pixel frequencies to get the most dominate colors for each tile. This would either be just the background color, just the grass color or a combination of background and number.
 4. After that, I wrote a small function to determine the nature of the tile, and now we have tile recognition!
 
 ## Difficult numbers
@@ -26,4 +26,4 @@ I'm lazy and don't want to make a replica of Google minesweeper, but I also need
 
 Thankfully, [others](https://www.reddit.com/r/Minesweeper/comments/s10ek7/got_a_7_and_a_6_google_minesweeper/) on the internet have encountered these numbers and have been kind enough to [document them](https://www.reddit.com/r/Minesweeper/comments/oxyatz/my_first_8_tile/). 
 
-Now I can screenshot a game I have in progress and using photo editing software like [Gimp](https://www.gimp.org/) can easily test that these values work and refine my algorithm when they don't
+Now I can screenshot a game I have in progress and using photo editing software like [Gimp](https://www.gimp.org/) can easily test that these values work and refine my algorithm when they don't.
