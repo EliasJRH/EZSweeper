@@ -27,3 +27,8 @@ I'm lazy and don't want to make a replica of Google minesweeper, but I also need
 Thankfully, [others](https://www.reddit.com/r/Minesweeper/comments/s10ek7/got_a_7_and_a_6_google_minesweeper/) on the internet have encountered these numbers and have been kind enough to [document them](https://www.reddit.com/r/Minesweeper/comments/oxyatz/my_first_8_tile/). 
 
 Now I can screenshot a game I have in progress and using photo editing software like [Gimp](https://www.gimp.org/) can easily test that these values work and refine my algorithm when they don't.
+
+## Outside the board
+Should a tile be uncovered near the edge of the board, there's a chance that at some point the bot will find enough empty tiles and start flagging or uncovering the adjacent tiles. This is great if it's inside the board but this also brings the chance of the bot clicking outside the board
+
+I implemented a small function to check if coordinates to click on are valid.
