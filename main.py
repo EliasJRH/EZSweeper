@@ -28,7 +28,7 @@ def start_game():
     pag.moveTo(665, 365)
 
 def is_valid_coordinate(x, y, xp, yp):
-    return ((x + xp >= START_X and x + xp <= MAX_X) and (y + yp >= START_Y or y + yp <= MAX_Y))
+    return ((x + xp >= START_X and x + xp <= MAX_X) and (y + yp >= START_Y and y + yp <= MAX_Y))
 
 # Counts adjacent tiles and returns the number of unmarked tiles and the number of flagged tiles
 def count_adj_tiles(x, y):
@@ -150,20 +150,19 @@ def play():
         cur_y = START_Y + (25 * ty)
 
         tile = get_tile(cur_x, cur_y)
-
+## TODO: need to figure out when to ignore tiles
         if tile == "dirt":
             T.pop(ind)
             ind -= 1
         elif tile != "grass" and tile != "flag":
             adj_tiles = count_adj_tiles(cur_x, cur_y)
-            if adj_tiles[0] + adj_tiles[1] == tile:
-                flag_adj_tiles(cur_x, cur_y)
-                T.pop(ind)
-                ind -= 1
-            elif adj_tiles[1] == tile:
+            if adj_tiles[1] == tile:
                 click_adj_tiles(cur_x, cur_y)
                 T.pop(ind)
                 ind -= 1
+            elif adj_tiles[0] + adj_tiles[1] == tile:
+                flag_adj_tiles(cur_x, cur_y)
+            
         ind += 1
         if ind == len(T) - 1:
             ind = 0
