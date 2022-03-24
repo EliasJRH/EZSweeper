@@ -44,7 +44,7 @@ while True:
     pyautogui.moveTo(xpos, ypos)
     sc = pyautogui.screenshot(region=(xpos - 10.5, ypos - 10.5, 20, 20))
     print(sc)
-    sc.save("1.png")
+    sc.save("test_images/1.png")
     colors = sc.getcolors()
     ncolors = list(filter(reduce_sc_colors, colors))
     print(ncolors)
