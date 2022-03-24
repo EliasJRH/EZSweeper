@@ -28,7 +28,7 @@ def start_game():
     pag.moveTo(665, 365)
 
 def is_valid_coordinate(x, y, xp, yp):
-    return ((x + xp >= START_X or x + xp <= START_X) and (y + yp >= START_Y or y + yp <= START_Y))
+    return ((x + xp >= START_X and x + xp <= MAX_X) and (y + yp >= START_Y or y + yp <= MAX_Y))
 
 # Counts adjacent tiles and returns the number of unmarked tiles and the number of flagged tiles
 def count_adj_tiles(x, y):
