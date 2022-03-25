@@ -4,14 +4,12 @@ import webbrowser
 from consts import *
 import copy
 
-# search bar is 112px tall any y coordinate obtained from firefox extension must be offset by 112px
-
-# Opens
+# Opens minesweeper in browser
 def open_minesweeper():
     webbrowser.open("https://www.google.com/search?client=firefox-b-d&q=minesweeper")
     time.sleep(2)
 
-
+# Changes difficulty to hard, might change to add more difficulties later
 def select_difficulty():
     pag.moveTo(500, 600)
     pag.click()
@@ -20,14 +18,19 @@ def select_difficulty():
     pag.moveTo(725, 435)
     pag.click()
 
-
+# Clicks on center tiles
 def start_game():
     pag.moveTo(940, 555)
     pag.click()
     pag.moveTo(665, 365)
 
+# Checks if coordinate is valid
+# Coordinate is not valid if it falls outside the playing screen, see dimensions in consts.py
 def is_valid_coordinate(x, y, xp, yp):
-    return ((x + xp >= START_X and x + xp <= MAX_X) and (y + yp >= START_Y and y + yp <= MAX_Y))
+    return (x + xp >= START_X and x + xp <= MAX_X) and (
+        y + yp >= START_Y and y + yp <= MAX_Y
+    )
+
 
 # Counts adjacent tiles and returns the number of unmarked tiles and the number of flagged tiles
 def count_adj_tiles(x, y):
@@ -52,10 +55,6 @@ def flag_adj_tiles(x, y):
                 pag.click(button="right")
 
 
-# TODO: change searching to account for the edges of the screen
-# Have to create TO_SEARCH_L, TO_SEARCH_R, TO_SEARCH_U, TO_SEARCH_D
-# All with associated tiles
-
 # Clicks all adjacent tiles
 def click_adj_tiles(x, y):
     for c in TO_SEARCH:
@@ -64,13 +63,15 @@ def click_adj_tiles(x, y):
             pag.click(button="left")
 
 
-# Only to be used with a filter function
+# Only to be used with filter
+# Removes any color that doesn't have a frequency of more than 20 pixels
 def reduce_sc_colors(color):
     if color[0] > 20:
         return True
     return False
 
 
+# fmt: off
 """Screenshot and return screenshot of game board at given x and y coordinates
 
 :param x: the position of the tile along the x axis
@@ -81,10 +82,12 @@ def reduce_sc_colors(color):
 :returns: a pillow image object of the tile
 :rtype: Pillow image object
 """
+# fmt: on
 def screenshot_tile(x, y):
     return pag.screenshot(region=(x - 10.5, y - 10.5, 20, 20))
 
 
+# fmt: off
 """Identifies a tile given it's colors
 
 :param colors: An unsorted list containing tuples of RGB colors and their frequency
@@ -93,10 +96,11 @@ def screenshot_tile(x, y):
 :returns: string representing tile type or int representing tile number
 :rtype: string or int
 """
+# fmt: on
 def identify_tile_by_colors(colors):
     # this is a very crude way of checking for colors
     # basically, I'm running through the whole list and checking if a color exists in order of priority
-    # given, the list would be at most 3 elements long so relatively it's quite a small operation 
+    # given, the list would be at most 3 elements long so relatively it's quite a small operation
     for color in colors:
         if color[1] in COLORS:
             return COLORS[color[1]]
@@ -111,6 +115,7 @@ def identify_tile_by_colors(colors):
     pass
 
 
+# fmt: off
 """Gets and returns the tile type
 
 :param x: the position of the tile along the x axis
@@ -121,6 +126,7 @@ def identify_tile_by_colors(colors):
 :returns: string representing tile type or int representing tile number
 :rtype: string or int
 """
+# fmt: on
 def get_tile(x, y):
     pag.moveTo(x, y)
     tile_screenshot = screenshot_tile(x, y)
@@ -136,9 +142,6 @@ def play():
 
     T = copy.deepcopy(TILES)
 
-    # TODO:
-    # Have to analyze each number box and find where the numbers intersect at the same position in the box
-    # Use that position as a way of grabbing the color and identify the number of adjacent bombs by that color
     ind = 0
 
     while T:
@@ -149,7 +152,6 @@ def play():
         cur_y = START_Y + (25 * ty)
 
         tile = get_tile(cur_x, cur_y)
-## TODO: need to figure out when to ignore tiles
         if tile == "dirt":
             T.pop(ind)
             ind -= 1
@@ -161,39 +163,10 @@ def play():
                 ind -= 1
             elif adj_tiles[0] + adj_tiles[1] == tile:
                 flag_adj_tiles(cur_x, cur_y)
-            
+
         ind += 1
         if ind == len(T) - 1:
             ind = 0
-    # while True:
-    #     x = 665
-    #     y = 365
-    #     for yy in range(20):
-    #         for xx in range(23):
-    #             x += 25
-    #             pag.moveTo(x, y)
-    #             for z in range(15):
-    #                 cur_sc = pag.screenshot()
-    #                 cur_col = cur_sc.getpixel((x, y))
-    #                 if cur_col in IGNORE:
-    #                     break
-    #                 if cur_col in COLORS:
-    #                     res = count_adj_tiles(x, y)
-    #                     if (res[0] + res[1] == COLORS[cur_col]):
-    #                         flag_adj_tiles(x, y)
-    #                     elif (res[1] == COLORS[cur_col]):
-    #                         click_adj_tiles(x, y)
-    #                     break
-    #                 pag.move(0.1, 0)
-    #         y += 25
-    #         x = 665
-
-    # while True:
-    #     time.sleep(1)
-    #     x,y = pag.position()
-    #     cur = pag.screenshot()
-    #     print(cur.getpixel((x,y)))
-
 
 def main():
     open_minesweeper()
