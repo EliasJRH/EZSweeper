@@ -1,3 +1,4 @@
+import keyboard
 import pyautogui as pag
 import time
 import webbrowser
@@ -9,6 +10,7 @@ def open_minesweeper():
     webbrowser.open("https://www.google.com/search?client=firefox-b-d&q=minesweeper")
     time.sleep(2)
 
+
 # Changes difficulty to hard, might change to add more difficulties later
 def select_difficulty():
     pag.moveTo(500, 600)
@@ -18,11 +20,13 @@ def select_difficulty():
     pag.moveTo(725, 435)
     pag.click()
 
+
 # Clicks on center tiles
 def start_game():
     pag.moveTo(940, 555)
     pag.click()
     pag.moveTo(665, 365)
+
 
 # Checks if coordinate is valid
 # Coordinate is not valid if it falls outside the playing screen, see dimensions in consts.py
@@ -135,38 +139,124 @@ def get_tile(x, y):
     return identify_tile_by_colors(tile_colors)
 
 
+def get_grass_tile_set(x, y):
+    grass_set = set()
+    for c in TO_SEARCH:
+        if is_valid_coordinate(x, y, c[0], c[1]):
+            tile = get_tile(x + c[0], y + c[1])
+            if tile == "grass":
+                grass_set.add((x + c[0], y + c[1]))
+    return grass_set
+
+
+def flag_tile(x, y):
+    pag.moveTo(x, y)
+    pag.click(button="right")
+
+
+def click_tile(x, y):
+    pag.moveTo(x, y)
+    pag.click(button="left")
+
+
 # Plays the game
 def play():
+    print("BOT IS RUNNING")
+    print("Press 'q' to quit")
     # pag.PAUSE = 1
     pag.PAUSE = 0
+    pause = True
 
+    NEW_T = copy.deepcopy(TILES)
     T = copy.deepcopy(TILES)
-
-    ind = 0
+    change_made = True
 
     while T:
-        cur_tile = T[ind]
-        tx = cur_tile[0]
-        ty = cur_tile[1]
-        cur_x = START_X + (25 * tx)
-        cur_y = START_Y + (25 * ty)
+        ind = 0
+        if not change_made:
+            T = copy.deepcopy(TILES)
+        else:
+            T = copy.deepcopy(NEW_T)
+        NEW_T = []
+        change_made = False
 
-        tile = get_tile(cur_x, cur_y)
-        if tile == "dirt":
-            T.pop(ind)
-            ind -= 1
-        elif tile != "grass" and tile != "flag":
-            adj_tiles = count_adj_tiles(cur_x, cur_y)
-            if adj_tiles[1] == tile:
-                click_adj_tiles(cur_x, cur_y)
-                T.pop(ind)
-                ind -= 1
-            elif adj_tiles[0] + adj_tiles[1] == tile:
-                flag_adj_tiles(cur_x, cur_y)
+        while ind < len(T) and pause:
+            cur_tile = T[ind]
+            tx = cur_tile[0]
+            ty = cur_tile[1]
+            cur_x = START_X + (25 * tx)
+            cur_y = START_Y + (25 * ty)
 
-        ind += 1
-        if ind == len(T) - 1:
-            ind = 0
+            tile = get_tile(cur_x, cur_y)
+            if tile == "dirt" or tile == "flag":
+                pass
+            elif tile != "grass":
+                adj_tiles = count_adj_tiles(cur_x, cur_y)
+                if adj_tiles[1] == tile:
+                    change_made = True
+                    click_adj_tiles(cur_x, cur_y)
+                elif adj_tiles[0] + adj_tiles[1] == tile:
+                    change_made = True
+                    flag_adj_tiles(cur_x, cur_y)
+                else:
+                    NEW_T.append([tx, ty])
+            else:
+                NEW_T.append([tx,ty])
+                        
+
+            ind += 1
+            if keyboard.is_pressed("q"): 
+                if pause: pause = False
+                else: pause = True
+
+        # ind = 0
+        # if not change_made:
+        #     found = False
+        #     while ind < len(T) and pause:
+        #         if found: break
+        #         cur_tile = T[ind]
+        #         tx = cur_tile[0]
+        #         ty = cur_tile[1]
+        #         cur_x = START_X + (25 * tx)
+        #         cur_y = START_Y + (25 * ty)
+        #         tile = get_tile(cur_x, cur_y)
+
+        #         if tile == "dirt":
+        #             T.pop(ind)
+        #             ind -= 1
+        #         elif tile != "grass" and tile != "flag":
+        #             adj_tiles = count_adj_tiles(cur_x, cur_y)
+        #             remaining_bombs = tile - adj_tiles[1]
+        #             cur_grass_set = get_grass_tile_set(cur_x, cur_y)
+        #             for c in TO_SEARCH:
+        #                 if is_valid_coordinate(cur_x, cur_y, c[0], c[1]):
+        #                     adj_tile = get_tile(cur_x + c[0], cur_y + c[1])
+        #                     if adj_tile in COLORS.values():
+        #                         adj_remaining_bombs = adj_tile - count_adj_tiles(cur_x + c[0], cur_y + c[1])[1]
+        #                         adj_tile_grass_set = get_grass_tile_set(
+        #                             cur_x + c[0], cur_y + c[1]
+        #                         )
+        #                         if (len(cur_grass_set) >= len(adj_tile_grass_set)):
+        #                             larger = cur_grass_set
+        #                             smaller = adj_tile_grass_set
+        #                         else:
+        #                             larger = adj_tile_grass_set
+        #                             smaller = cur_grass_set
+
+        #                         none_check = smaller - larger
+
+        #                         if len(none_check) == 0 and remaining_bombs == adj_remaining_bombs:
+        #                             dif = larger - smaller
+        #                             if len(dif) > 0:
+        #                                 for coord in dif:
+        #                                     click_tile(coord[0], coord[1])
+        #                                 found = True
+        #                                 break               
+        #         ind += 1
+        #         if keyboard.is_pressed("q"):
+        #             if pause: pause = False
+        #             else: pause = True
+
 
 def main():
     open_minesweeper()

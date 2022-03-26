@@ -1,6 +1,6 @@
 import pyautogui
 from consts import *
-
+from main import count_adj_tiles
 
 def reduce_sc_colors(color):
     if color[0] > 15:
@@ -38,15 +38,17 @@ def identify_tile(colors):
 while True:
     x = int(input())
     y = int(input())
-    print(665 + (x * 25), 370 + (y * 25))
+    # print(665 + (x * 25), 370 + (y * 25))
     xpos = 665 + (x * 25)
     ypos = 370 + (y * 25)
-    pyautogui.moveTo(xpos, ypos)
-    sc = pyautogui.screenshot(region=(xpos - 10.5, ypos - 10.5, 20, 20))
-    print(sc)
-    sc.save("test_images/1.png")
-    colors = sc.getcolors()
-    ncolors = list(filter(reduce_sc_colors, colors))
-    print(ncolors)
-    r = identify_tile(ncolors)
-    print(r)
+    # pyautogui.moveTo(xpos, ypos)
+    # sc = pyautogui.screenshot(region=(xpos - 10.5, ypos - 10.5, 20, 20))
+    # print(sc)
+    d = count_adj_tiles(xpos, ypos)
+    print(d)
+    # sc.save("test_images/1.png")
+    # colors = sc.getcolors()
+    # ncolors = list(filter(reduce_sc_colors, colors))
+    # print(ncolors)
+    # r = identify_tile(ncolors)
+    # print(r)
