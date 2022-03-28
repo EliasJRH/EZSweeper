@@ -21,6 +21,10 @@ Clearly there's a lot that can be improved upon here, so here some solutions:
 3. Once I get the colors, I can filter out the faded edges of the number by removing the lower pixel frequencies to get the most dominate colors for each tile. This would either be just the background color, just the grass color or a combination of background and number.
 4. After that, I wrote a small function to determine the nature of the tile, and now we have tile recognition!
 
+After all this work, I don't forsee any issues that would completely break anything.
+
+
+
 ## Difficult numbers
 I'm lazy and don't want to make a replica of Google minesweeper, but I also need to ensure that the mouse is able to detect every number, even the ones that don't show up very often like 6, 7 and 8. However, it's very hard to test for something that happens very rarely that you also can't control. 
 
@@ -40,12 +44,26 @@ I created a list of each tile index to keep track of the tiles I still have to s
 
 Once an uncovered tiles has either flagged all surrounding tiles or clicked all surrounding tiles, there's no need to search it again because it won't offer any new information. All of it's surrounding tiles have been either clicked or flagged so I can ignore them going forward.
 
-Great, now I have a way to speed things up. My initial implementation for this was to use a while loop with a list of coordinates and remove them in transit as tiles became uncovered, but I encountered an unexpected problem. For some reason, tiles that weren't supposed to be removed from this list we're getting removed. I tried several debugging solutions but was never able to replicate this in a controlled environment. Eventually, I chalked this issue up to the bot simply moving to fast, perhaps it was removing things before they could be entirely processed, I'm not sure but I've spent too much time on this to care.
+Great, now I have a way to speed things up. My initial implementation for this was to use a while loop with a list of coordinates and remove them in transit as tiles became uncovered, but I encountered an unexpected problem. For some reason, tiles that weren't supposed to be removed from this list we're getting removed. 
 
-My first solution was to change the way I was removing tiles. instead of constantly removing things from a list which is known to be an O(n) operation for lists, I would simply add each tile I still need to search to a new list, amortized O(1), and replace the searching list on each completion of the bot searching the board. 
+I had been stuck on this one problem for days. This was a serious issue because if I'm not able to properly ignore tiles, I would essentially need to never ignore any tiles so the game would never lock. This means that I would need to search 480 tiles every time the search looped. Not only this, but as the game progress and more tiles are uncovered, I need to spend more time searching all of those adjacent tiles which slow down the bot even more.
 
-That's nice, now I have a slightly faster way of searching, but I was still getting this weird behaviour of prematurely removing tiles. I felt at this point that my only options was to slow down the bot, which wouldn't have been acceptable since this bot needs to be blazing fast (🚀). I figured that if I couldn't beat the bug, I would work around it.
+So let's do some debugging. 
 
-I setup a boolean that would track if a change had been made on the board (flagging or clicking tiles). I initially set it to false everytime the bot begins a scan of the board and then set it to true whenever a change is made. If the bot was to go through the whole board without making any changes, then perhaps it removed a tile that it shouldn't have. If this happened, I set the list of tiles to search back to the entire game board. 
+Maybe Python doesn't like the way I'm removing indices to search in the while loop. Ok, let's fix that, in stead of removing indices using `list.pop()`, I'll remove things stored in the list using `list.remove()` which removes the first occurence of an element in a list. Since the items in the list are unique, this shouldn't pose an issue. Unfortunately the problem persisted.
 
-I admit that this isn't an amazing solution - perhaps I could waste more time looking into why it was prematurely ignoring tiles, but if this is happening once every so often, I feel like I can afford the time to rescan the board if it means that the bot will always be correct.
+Maybe removing things from my list at all won't work. Instead of this, how about I simply store all of the indices I still need to search in a temporary list and then replace the main list as I go. This is actually an improvement since `list.pop()` and `list.remove()` are both O(n) operations whereas adding to a list is *amortized* O(1) (thank you COMP2402). Problem still persists.
+
+Ok this is getting annoying.
+
+At this point I decided to throw in the towel for a bit. I set up a boolean tracker that would reset the search list if no changes had been made. This was *painfully slow* so I decided to take another stab at it.
+
+For once in my life, I actually used a debugger to track the list as the game progressed. But now I wasn't seeing this behavior. Had the bug magically disappeared? No, the debugger would pause everytime a tile needs to have it's adjacent tiles clicked. In other words the bot *slowed down* this gave me an indication that maybe the speed of the bot was the issue.
+
+But obviously this bot needs to be blazing fast (🚀) so I couldn't sacrifice speed. I decided to add some print statements to the main logic where I finally discovered the main cause of the bug. *The tiles that were getting ignored were being misidentified as dirt or flag tiles*
+
+Why were they getting misidentified, why was this only happening in some cases and what does the speed (🚀) of the bot have to do with anything? When you click a tile to remove it in Google minesweeper, a little ~~infuriating~~ animation of the tile flying away plays. As you might've guessed it, as the bot moves from clicking a tile to screenshotting the next one, this animation would still be playing so instead of the screenshot consisting only of a tile, it would consist of a little green square obscuring a tile. This, in turn, would mess up the colors found in that screen shot and because the only known color in the messed up screenshot is dirt, that's all it recoginized, returned and then ignored.
+
+Luckily, after several days of debugging, the fix for this was simply. Since a dirt tile is composed of a single color and each screenshot contains exactly 400 pixels (20 x 20), I could simply check if the color of a tile was a dirt tile *and* that color appeared in 400 pixels. If it didn't well we treat the same way as grass and re-vist it later. Point being, now no tiles are getting ignored prematurely. 
+
+*sigh*
