@@ -21,7 +21,7 @@ def select_difficulty():
     pag.click()
 
 
-# Clicks on center tiles
+# Clicks on center tile
 def start_game():
     pag.moveTo(940, 555)
     pag.click()
@@ -52,27 +52,35 @@ def count_adj_tiles(x, y):
 
 # Flags all adjacent tiles
 def flag_adj_tiles(x, y):
+    clicked = False
     for c in TO_SEARCH:
         if is_valid_coordinate(x, y, c[0], c[1]):
             tile = get_tile(x + c[0], y + c[1])
             if tile == "grass":
+                clicked = True
                 pag.click(button="right")
+    return clicked
 
 
 # Clicks all adjacent tiles
 def click_adj_tiles(x, y):
+    clicked = False
     for c in TO_SEARCH:
         if is_valid_coordinate(x, y, c[0], c[1]):
-            pag.moveTo(x + c[0], y + c[1])
-            pag.click(button="left")
+            # pag.moveTo(x + c[0], y + c[1])
+            tile = get_tile(x + c[0], y + c[1])
+            if tile == "grass":
+                clicked = True
+                pag.click(button="left")
+    return clicked
 
 
-# Only to be used with filter
-# Removes any color that doesn't have a frequency of more than 20 pixels
-def reduce_sc_colors(color):
-    if color[0] > 20:
-        return True
-    return False
+# # Only to be used with filter
+# # Removes any color that doesn't have a frequency of more than 20 pixels
+# def reduce_sc_colors(color):
+#     if color[0] > 20:
+#         return True
+#     return False
 
 
 # fmt: off
@@ -105,18 +113,22 @@ def identify_tile_by_colors(colors):
     # this is a very crude way of checking for colors
     # basically, I'm running through the whole list and checking if a color exists in order of priority
     # given, the list would be at most 3 elements long so relatively it's quite a small operation
+
     for color in colors:
         if color[1] in COLORS:
             return COLORS[color[1]]
     for color in colors:
         if color[1] in FLAG_COLORS:
             return "flag"
+
     for color in colors:
         if color[1] in GRASS:
             return "grass"
-        elif color[1] in DIRT:
+        # A dirt tile will only ever consist of a single color with a frequency of 400 pixels
+        elif color[1] in DIRT and color[0] == 400:
             return "dirt"
-    pass
+
+    return "redo"
 
 
 # fmt: off
@@ -135,10 +147,21 @@ def get_tile(x, y):
     pag.moveTo(x, y)
     tile_screenshot = screenshot_tile(x, y)
     tile_colors = tile_screenshot.getcolors()
-    tile_colors = list(filter(reduce_sc_colors, tile_colors))
     return identify_tile_by_colors(tile_colors)
 
 
+# fmt: off
+"""Gets and returns of set of all grass tiles around a given tile
+
+:param x: the position of the tile along the x axis
+:type x: int
+:param y: the position of the tile along the y axis
+:type y: int
+
+:returns: set containing tuples of x and y coordinates of grass tiles
+:rtype: set((int, int),...)
+"""
+# fmt: on
 def get_grass_tile_set(x, y):
     grass_set = set()
     for c in TO_SEARCH:
@@ -149,14 +172,75 @@ def get_grass_tile_set(x, y):
     return grass_set
 
 
+# Flags a single tile of a given x and y coordinate
 def flag_tile(x, y):
     pag.moveTo(x, y)
     pag.click(button="right")
 
 
+# Clicks a single tile of a given x and y coordinate
 def click_tile(x, y):
     pag.moveTo(x, y)
     pag.click(button="left")
+
+
+def advanced_search(T):
+    ind = 0
+    while ind < len(T):
+        cur_tile = T[ind]
+        tx = cur_tile[0]
+        ty = cur_tile[1]
+        cur_x = START_X + (25 * tx)
+        cur_y = START_Y + (25 * ty)
+
+        tile = get_tile(cur_x, cur_y)
+
+        if tile == "dirt":
+            T.pop(ind)
+            ind -= 1
+        elif tile != "grass" and tile != "flag":
+            adj_tiles = count_adj_tiles(cur_x, cur_y)
+            remaining_bombs = tile - adj_tiles[1]
+            cur_grass_set = get_grass_tile_set(cur_x, cur_y)
+            for c in TO_SEARCH:
+                if is_valid_coordinate(cur_x, cur_y, c[0], c[1]):
+                    adj_tile = get_tile(cur_x + c[0], cur_y + c[1])
+                    if adj_tile in COLORS.values():
+                        adj_remaining_bombs = (
+                            adj_tile - count_adj_tiles(cur_x + c[0], cur_y + c[1])[1]
+                        )
+                        adj_tile_grass_set = get_grass_tile_set(
+                            cur_x + c[0], cur_y + c[1]
+                        )
+                        if len(cur_grass_set) >= len(adj_tile_grass_set):
+                            larger = cur_grass_set
+                            smaller = adj_tile_grass_set
+                        else:
+                            larger = adj_tile_grass_set
+                            smaller = cur_grass_set
+
+                        none_check = smaller - larger
+
+                        if len(none_check) == 0:
+                            dif = larger - smaller
+                            # if the number of bombs between the two tiles is equal
+                            # that means that the tiles contained in the larger adj grass set
+                            # and not the smaller adj grass set are unnecesarry
+                            if remaining_bombs == adj_remaining_bombs:
+                                if len(dif) > 0:
+                                    for coord in dif:
+                                        click_tile(coord[0], coord[1])
+                            # elif (
+                            #     remaining_bombs - adj_remaining_bombs > 0
+                            #     and len(smaller) > 0
+                            # ):
+                            #     if len(dif) > 0:
+                            #         for coord in dif:
+                            #             flag_tile(coord[0], coord[1])
+
+        ind += 1
+        if keyboard.is_pressed("q"):
+            quit()
 
 
 # Plays the game
@@ -165,7 +249,6 @@ def play():
     print("Press 'q' to quit")
     # pag.PAUSE = 1
     pag.PAUSE = 0
-    pause = True
 
     NEW_T = copy.deepcopy(TILES)
     T = copy.deepcopy(TILES)
@@ -173,89 +256,45 @@ def play():
 
     while T:
         ind = 0
+
+        T = copy.deepcopy(NEW_T)
+
         if not change_made:
-            T = copy.deepcopy(TILES)
-        else:
-            T = copy.deepcopy(NEW_T)
+            advanced_search(T)
+                
         NEW_T = []
+
         change_made = False
 
-        while ind < len(T) and pause:
+        while ind < len(T):
             cur_tile = T[ind]
-            tx = cur_tile[0]
-            ty = cur_tile[1]
+            tx, ty = cur_tile[0], cur_tile[1]
             cur_x = START_X + (25 * tx)
             cur_y = START_Y + (25 * ty)
 
             tile = get_tile(cur_x, cur_y)
+
             if tile == "dirt" or tile == "flag":
                 pass
-            elif tile != "grass":
+            elif tile in NUMBERS:
                 adj_tiles = count_adj_tiles(cur_x, cur_y)
                 if adj_tiles[1] == tile:
-                    change_made = True
-                    click_adj_tiles(cur_x, cur_y)
+                    if click_adj_tiles(cur_x, cur_y):
+                        change_made = True
                 elif adj_tiles[0] + adj_tiles[1] == tile:
-                    change_made = True
-                    flag_adj_tiles(cur_x, cur_y)
+                    if flag_adj_tiles(cur_x, cur_y):
+                        change_made = True
                 else:
                     NEW_T.append([tx, ty])
             else:
-                NEW_T.append([tx,ty])
-                        
+                NEW_T.append([tx, ty])
 
             ind += 1
-            if keyboard.is_pressed("q"): 
-                if pause: pause = False
-                else: pause = True
-
-        # ind = 0
-        # if not change_made:
-        #     found = False
-        #     while ind < len(T) and pause:
-        #         if found: break
-        #         cur_tile = T[ind]
-        #         tx = cur_tile[0]
-        #         ty = cur_tile[1]
-        #         cur_x = START_X + (25 * tx)
-        #         cur_y = START_Y + (25 * ty)
-        #         tile = get_tile(cur_x, cur_y)
-
-        #         if tile == "dirt":
-        #             T.pop(ind)
-        #             ind -= 1
-        #         elif tile != "grass" and tile != "flag":
-        #             adj_tiles = count_adj_tiles(cur_x, cur_y)
-        #             remaining_bombs = tile - adj_tiles[1]
-        #             cur_grass_set = get_grass_tile_set(cur_x, cur_y)
-        #             for c in TO_SEARCH:
-        #                 if is_valid_coordinate(cur_x, cur_y, c[0], c[1]):
-        #                     adj_tile = get_tile(cur_x + c[0], cur_y + c[1])
-        #                     if adj_tile in COLORS.values():
-        #                         adj_remaining_bombs = adj_tile - count_adj_tiles(cur_x + c[0], cur_y + c[1])[1]
-        #                         adj_tile_grass_set = get_grass_tile_set(
-        #                             cur_x + c[0], cur_y + c[1]
-        #                         )
-        #                         if (len(cur_grass_set) >= len(adj_tile_grass_set)):
-        #                             larger = cur_grass_set
-        #                             smaller = adj_tile_grass_set
-        #                         else:
-        #                             larger = adj_tile_grass_set
-        #                             smaller = cur_grass_set
-
-        #                         none_check = smaller - larger
-
-        #                         if len(none_check) == 0 and remaining_bombs == adj_remaining_bombs:
-        #                             dif = larger - smaller
-        #                             if len(dif) > 0:
-        #                                 for coord in dif:
-        #                                     click_tile(coord[0], coord[1])
-        #                                 found = True
-        #                                 break               
-        #         ind += 1
-        #         if keyboard.is_pressed("q"):
-        #             if pause: pause = False
-        #             else: pause = True
+            if keyboard.is_pressed("q"):
+                quit()
+        if keyboard.is_pressed("q"):
+            quit()
+        ind = 0
 
 
 def main():
