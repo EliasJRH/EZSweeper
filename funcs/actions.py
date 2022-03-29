@@ -16,6 +16,7 @@ def click_tile(x, y):
         pag.moveTo(x, y)
         pag.click(button="left")
 
+
 # Flags all adjacent tiles
 def flag_adj_tiles(x, y):
     clicked = False

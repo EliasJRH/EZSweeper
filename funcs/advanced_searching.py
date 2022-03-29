@@ -24,6 +24,7 @@ def get_grass_tile_set(x, y):
                 grass_set.add((x + c[0], y + c[1]))
     return grass_set
 
+
 def advanced_search(T):
     ind = 0
     while ind < len(T):
