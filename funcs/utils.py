@@ -9,6 +9,10 @@ def is_valid_coordinate(x, y, xp, yp):
     )
 
 
+def is_valid_coordinate_no_adds(x, y):
+    return (x >= START_X and x <= MAX_X) and (y >= START_Y and y <= MAX_Y)
+
+
 # Counts adjacent tiles and returns the number of unmarked tiles and the number of flagged tiles
 def count_adj_tiles(x, y):
     # data = [unmarked tiles, flagged tiles]
