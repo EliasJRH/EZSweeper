@@ -16,4 +16,4 @@ python_version = "3.9"
 
 [scripts]
 main = "python main.py"
-format = "pipenv run black *.py funcs/*.py"
+format = "pipenv run black *.py funcs/*.py --line-length=90"
