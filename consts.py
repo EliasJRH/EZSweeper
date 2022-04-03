@@ -1,11 +1,14 @@
 # block width: 25px
 # block height: 25px
 
-START_X = 665
-START_Y = 370
+START_X_MP = 665
+START_Y_MP = 370
 
-MAX_X = 1255
-MAX_Y = 857
+MAX_X_MP = 1255
+MAX_Y_MP = 857
+
+CENTER_X_MP = 940
+CENTER_Y_MP = 555
 
 GRASS = set({(162, 209, 73), (185, 221, 119), (191, 225, 125), (170, 215, 81)})
 
@@ -39,6 +42,8 @@ TO_SEARCH = [
     [0, 25],
     [25, 25],
 ]
+
+ADJ_C = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]]
 
 TILES = [
     [0, 0],
