@@ -38,7 +38,6 @@ def screenshot_tile(x, y):
 def identify_tile_by_colors(colors):
     # this is a very crude way of checking for colors
     # basically, I'm running through the whole list and checking if a color exists in order of priority
-    # given, the list would be at most 3 elements long so relatively it's quite a small operation
 
     for color in colors:
         if color[1] in COLORS:
