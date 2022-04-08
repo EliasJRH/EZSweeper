@@ -17,17 +17,19 @@ def play():
     NEW_T = copy.deepcopy(TILES)
     T = copy.deepcopy(TILES)
 
-    change_made = (
-        True  # Flag that determines whether or not we should check the entire board
-    )
-    adv_search_flag = (
-        False  # Flag that determines whether or not advanced searching should be used
-    )
-
-    ignore = set(
-        {}
-    )  # Contains all indicies of the board with no information (dirt, flagged or completed tiles)
-    new_t_set = set({})  # Contains all indicies to be searched again, no duplicates
+    #fmt: off
+    # Flag that determines whether or not we should check the entire board
+    change_made = True
+    
+    # Flag that determines whether or not advanced searching should be used
+    adv_search_flag = False
+    
+    # Contains all indicies of the board with no information (dirt, flagged or completed tiles)
+    ignore = set({})
+    
+    # Contains all indicies to be searched again, no duplicates
+    new_t_set = set({})  
+    #fmt: on
 
     while T:
         ind = 0
@@ -40,6 +42,7 @@ def play():
             advanced_search(T, ignore)
             T = copy.deepcopy(TILES)
         else:
+            adv_search_flag = False
             T = copy.deepcopy(NEW_T)
 
         NEW_T = []
@@ -73,9 +76,9 @@ def play():
                             change_made = True
                             for adj_c in ADJ_C:
                                 # fmt: off
-                                if ((x_c + adj_c[0], y_c + adj_c[1]) not in ignore
-                                    and is_valid_coordinate(x_mp, y_mp, (adj_c[0] * 25), (adj_c[1] * 25))
-                                    and (x_c + adj_c[0],y_c + adj_c[1]) not in new_t_set):
+                                if ((x_c + adj_c[0], y_c + adj_c[1]) not in ignore # we're not ignoring the adjacent coordinate
+                                    and is_valid_coordinate(x_mp, y_mp, (adj_c[0] * 25), (adj_c[1] * 25)) # it's a valid coordinate
+                                    and (x_c + adj_c[0],y_c + adj_c[1]) not in new_t_set): # we're not already going to search it
                                         NEW_T.append([x_c + adj_c[0], y_c + adj_c[1]])
                                         new_t_set.add((x_c + adj_c[0],y_c + adj_c[1]))
                                 # fmt: on
