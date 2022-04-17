@@ -17,7 +17,7 @@ def play():
     NEW_T = copy.deepcopy(TILES)
     T = copy.deepcopy(TILES)
 
-    #fmt: off
+    # fmt: off
     # Flag that determines whether or not we should check the entire board
     change_made = True
     
@@ -29,10 +29,14 @@ def play():
     
     # Contains all indicies to be searched again, no duplicates
     new_t_set = set({})  
-    #fmt: on
+    # fmt: on
 
     while T:
         ind = 0
+
+        # Make function that takes screenshot of board and determines upper-left most tile coordinate 
+        # and lower-right most tile coordinate, then find coordinates in list and create slice containing only coordinates within
+        # those two incices, always restart the search from there when you run out of tiles
 
         if not change_made and not adv_search_flag:
             T = copy.deepcopy(TILES)
@@ -77,8 +81,8 @@ def play():
                             for adj_c in ADJ_C:
                                 # fmt: off
                                 if ((x_c + adj_c[0], y_c + adj_c[1]) not in ignore # we're not ignoring the adjacent coordinate
-                                    and is_valid_coordinate(x_mp, y_mp, (adj_c[0] * 25), (adj_c[1] * 25)) # it's a valid coordinate
-                                    and (x_c + adj_c[0],y_c + adj_c[1]) not in new_t_set): # we're not already going to search it
+                                    and is_valid_mouse_pos(x_mp + (adj_c[0] * 25), y_mp + (adj_c[1] * 25)) # it's a valid coordinate
+                                    and (x_c + adj_c[0], y_c + adj_c[1]) not in new_t_set): # we're not already going to search it
                                         NEW_T.append([x_c + adj_c[0], y_c + adj_c[1]])
                                         new_t_set.add((x_c + adj_c[0],y_c + adj_c[1]))
                                 # fmt: on
@@ -89,7 +93,7 @@ def play():
                             for adj_c in ADJ_C:
                                 # fmt: off
                                 if ((x_c + adj_c[0], y_c + adj_c[1]) not in ignore
-                                    and is_valid_coordinate(x_mp, y_mp, (adj_c[0] * 25), (adj_c[1] * 25))
+                                    and is_valid_mouse_pos(x_mp + (adj_c[0] * 25), y_mp + (adj_c[1] * 25))
                                     and (x_c + adj_c[0],y_c + adj_c[1]) not in new_t_set):
                                         NEW_T.append([x_c + adj_c[0], y_c + adj_c[1]])
                                         new_t_set.add((x_c + adj_c[0],y_c + adj_c[1]))

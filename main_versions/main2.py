@@ -60,8 +60,8 @@ def play():
                                 if (
                                     tx + t[0],
                                     ty + t[1],
-                                ) not in ignore and is_valid_coordinate(
-                                    cur_x, cur_y, (t[0] * 25), (t[1] * 25)
+                                ) not in ignore and is_valid_mouse_pos(
+                                    cur_x + (t[0] * 25), cur_y + (t[1] * 25) 
                                 ):
                                     T.insert(
                                         ind + 1,
