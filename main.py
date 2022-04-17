@@ -5,7 +5,7 @@ from funcs.startup import *
 from funcs.tile_identification import get_tile
 from funcs.actions import click_adj_tiles, flag_and_ignore_adj_tiles
 from funcs.utils import *
-from funcs.advanced_searching import advanced_search
+from funcs.advanced_searching import advanced_search_tile
 import copy
 
 # Plays the game
@@ -23,6 +23,7 @@ def play():
     
     # Flag that determines whether or not advanced searching should be used
     adv_search_flag = False
+    adv_search = False
     
     # Contains all indicies of the board with no information (dirt, flagged or completed tiles)
     ignore = set({})
@@ -42,10 +43,11 @@ def play():
             T = copy.deepcopy(TILES)
             adv_search_flag = True
         elif not change_made and adv_search_flag:
+            adv_search = True
             adv_search_flag = False
-            advanced_search(T, ignore)
             T = copy.deepcopy(TILES)
         else:
+            adv_search = False
             adv_search_flag = False
             T = copy.deepcopy(NEW_T)
 
@@ -71,7 +73,6 @@ def play():
 
                 if tile == "dirt" or tile == "flag":
                     ignore.add((x_c, y_c))
-                    pass
                 elif tile in NUMBERS:
                     adj_tiles = count_adj_tiles(x_mp, y_mp)
                     if adj_tiles[1] == tile:
@@ -98,6 +99,9 @@ def play():
                                         NEW_T.append([x_c + adj_c[0], y_c + adj_c[1]])
                                         new_t_set.add((x_c + adj_c[0],y_c + adj_c[1]))
                                 # fmt: on
+                    elif adv_search:
+                        if advanced_search_tile(x_mp, y_mp, tile):
+                            change_made = True
             ind += 1
             if keyboard.is_pressed("q"):
                 quit()
