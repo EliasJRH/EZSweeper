@@ -1,6 +1,4 @@
-# block width: 25px
-# block height: 25px
-
+# Mouse positions
 START_X_MP = 665
 START_Y_MP = 370
 
@@ -10,6 +8,7 @@ MAX_Y_MP = 857
 CENTER_X_MP = 940
 CENTER_Y_MP = 555
 
+# Tile colors
 GRASS = set({(162, 209, 73), (185, 221, 119), (191, 225, 125), (170, 215, 81)})
 
 DIRT = set({(215, 184, 153), (229, 194, 159), (242, 54, 7)})
@@ -30,8 +29,10 @@ COLORS = {
     (158, 158, 158): 8,
 }
 
+# Numbers
 NUMBERS = set({1, 2, 3, 4, 5, 6, 7, 8, 9})
 
+# Search coordinates
 TO_SEARCH = [
     [-25, -25],
     [0, -25],

@@ -21,23 +21,3 @@ def count_adj_tiles(x, y):
             elif tile == "grass":
                 data[0] += 1
     return data
-
-
-# def find_starting_coordinates(x, y):
-#     while get_tile(x, y) != "grass":
-#         y -= 25
-#     y += 25
-#     while get_tile(x, y) != "grass":
-#         x -= 25
-#     x += 25
-#     return (x, y)
-
-
-# def find_ending_coordinates(x, y):
-#     while get_tile(x, y) != "grass":
-#         y += 25
-#     y -= 25
-#     while get_tile(x, y) != "grass":
-#         x += 25
-#     x -= 25
-#     return (x, y)
