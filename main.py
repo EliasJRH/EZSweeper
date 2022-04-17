@@ -40,8 +40,8 @@ def play():
         # those two incices, always restart the search from there when you run out of tiles
 
         if not change_made and not adv_search_flag:
-            T = copy.deepcopy(TILES)
             adv_search_flag = True
+            T = copy.deepcopy(TILES)
         elif not change_made and adv_search_flag:
             adv_search = True
             adv_search_flag = False
@@ -51,7 +51,7 @@ def play():
             adv_search_flag = False
             T = copy.deepcopy(NEW_T)
 
-        NEW_T = []
+        NEW_T.clear()
         new_t_set.clear()
 
         # continue with this idea, this is good
@@ -63,7 +63,7 @@ def play():
         while ind < len(T):
             coords = T[ind]
             x_c, y_c = coords[0], coords[1]
-            print(f"\r{x_c}, {y_c}", end="")
+            print(f"\r{x_c}, {y_c}", end=" ")
 
             if (x_c, y_c) not in ignore:
                 x_mp = START_X_MP + (25 * x_c)
