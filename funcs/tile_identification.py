@@ -1,13 +1,8 @@
+import sys
 from consts import COLORS, FLAG_COLORS, DIRT, GRASS
 import pyautogui as pag
 
-# # Only to be used with filter
-# # Removes any color that doesn't have a frequency of more than 20 pixels
-# def reduce_sc_colors(color):
-#     if color[0] > 20:
-#         return True
-#     return False
-
+MOVE = True
 
 # fmt: off
 """Screenshot and return screenshot of game board at given x and y coordinates
@@ -69,7 +64,12 @@ def identify_tile_by_colors(colors):
 """
 # fmt: on
 def get_tile(x, y):
-    pag.moveTo(x, y)
+    if MOVE: pag.moveTo(x, y)
     tile_screenshot = screenshot_tile(x, y)
     tile_colors = tile_screenshot.getcolors()
     return identify_tile_by_colors(tile_colors)
+
+for x in range(1, len(sys.argv)):
+    cur_arg = sys.argv[x].split("=")
+    if cur_arg[0] == "-m" and cur_arg[1] == "off":
+        MOVE = False
