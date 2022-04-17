@@ -35,7 +35,7 @@ def play():
     while T:
         ind = 0
 
-        # Make function that takes screenshot of board and determines upper-left most tile coordinate 
+        # Make function that takes screenshot of board and determines upper-left most tile coordinate
         # and lower-right most tile coordinate, then find coordinates in list and create slice containing only coordinates within
         # those two incices, always restart the search from there when you run out of tiles
 
@@ -81,13 +81,13 @@ def play():
                         if click_adj_tiles(x_mp, y_mp):
                             change_made = True
                             cur_change_made = True
-                            
+
                     elif adj_tiles[0] + adj_tiles[1] == tile:
                         ignore.add((x_c, y_c))
                         if flag_and_ignore_adj_tiles(x_mp, y_mp, ignore):
                             change_made = True
                             cur_change_made = True
-                            
+
                     elif adv_search:
                         if advanced_search_tile(x_mp, y_mp, tile):
                             change_made = True

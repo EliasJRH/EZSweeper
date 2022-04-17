@@ -2,6 +2,7 @@ import pyautogui
 from consts import *
 from main import count_adj_tiles
 
+
 def reduce_sc_colors(color):
     if color[0] > 15:
         return True

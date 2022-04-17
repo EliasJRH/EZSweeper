@@ -25,6 +25,7 @@ def get_grass_tile_set(x, y):
                 grass_set.add((x + c[0], y + c[1]))
     return grass_set
 
+
 def advanced_search_tile(x_mp, y_mp, tile):
     change_made = False
 
@@ -48,7 +49,7 @@ def advanced_search_tile(x_mp, y_mp, tile):
 
                 # Determine, between current tile and current adjcacent tile
                 # which tile has more grass tile surrounding it, save those
-                # we'll need this information to determine which tile set to 
+                # we'll need this information to determine which tile set to
                 # perform actions on
                 if len(cur_grass_set) >= len(adj_tile_grass_set):
                     larger_bomb_no = remaining_bombs
@@ -75,7 +76,7 @@ def advanced_search_tile(x_mp, y_mp, tile):
                             for mp in dif:
                                 click_tile(mp[0], mp[1])
 
-                    # if the number of bombs in the greater tile set if larger than 
+                    # if the number of bombs in the greater tile set if larger than
                     # the size of the difference, that means that some number of tiles is
                     # in the shared tile set, and the remaining bombs for the larger bomb
                     # number is in the difference
