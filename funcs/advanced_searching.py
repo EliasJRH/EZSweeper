@@ -53,10 +53,12 @@ def advanced_search_tile(x_mp, y_mp, tile):
                 # perform actions on
                 if len(cur_grass_set) >= len(adj_tile_grass_set):
                     larger_bomb_no = remaining_bombs
+                    smaller_bomb_no = adj_remaining_bombs
                     larger = cur_grass_set
                     smaller = adj_tile_grass_set
                 else:
                     larger_bomb_no = adj_remaining_bombs
+                    smaller_bomb_no = remaining_bombs
                     larger = adj_tile_grass_set
                     smaller = cur_grass_set
 
@@ -80,7 +82,7 @@ def advanced_search_tile(x_mp, y_mp, tile):
                     # the size of the difference, that means that some number of tiles is
                     # in the shared tile set, and the remaining bombs for the larger bomb
                     # number is in the difference
-                    elif larger_bomb_no > len(dif):
+                    elif larger_bomb_no - smaller_bomb_no == len(dif):
                         if len(dif) > 0:
                             change_made = True
                             for mp in dif:
