@@ -7,25 +7,36 @@ from funcs.actions import click_tile, flag_tile
 # fmt: off
 """Gets and returns of set of all grass tiles around a given tile
 
-:param x: the position of the tile along the x axis
-:type x: int
-:param y: the position of the tile along the y axis
-:type y: int
+:param x_mp: the position of the mouse along the x axis
+:type x_mp: int
+:param y_mp: the position of the mouse along the y axis
+:type y_mp: int
 
 :returns: set containing tuples of x and y coordinates of grass tiles
 :rtype: set((int, int),...)
 """
 # fmt: on
-def get_grass_tile_set(x, y):
+def get_grass_tile_set(x_mp, y_mp):
     grass_set = set()
     for c in TO_SEARCH:
-        if is_valid_mouse_pos(x + c[0], y + c[1]):
-            tile = get_tile(x + c[0], y + c[1])
+        if is_valid_mouse_pos(x_mp + c[0], y_mp + c[1]):
+            tile = get_tile(x_mp + c[0], y_mp + c[1])
             if tile == "grass":
-                grass_set.add((x + c[0], y + c[1]))
+                grass_set.add((x_mp + c[0], y_mp + c[1]))
     return grass_set
 
+"""Runs advanced searching on a tile at given mouse positions
 
+:param x_mp: the position of the mouse along the x axis
+:type x_mp: int
+:param y_mp: the position of the mouse along the y axis
+:type y_mp: int
+:param tile: number of bombs adjacent to current tile
+:type tile: int
+
+:returns: true if change was made via advanced searching on tile
+:rtype: boolean
+"""
 def advanced_search_tile(x_mp, y_mp, tile):
     change_made = False
 

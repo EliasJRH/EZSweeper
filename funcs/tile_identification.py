@@ -7,17 +7,17 @@ MOVE = True
 # fmt: off
 """Screenshot and return screenshot of game board at given x and y coordinates
 
-:param x: the position of the tile along the x axis
-:type x: int
-:param y: the position of the tile along the y axis
-:type y: int
+:param x_mp: the position of the mouse along the x axis
+:type x_mp: int
+:param y_mp: the position of the mouse along the y axis
+:type y_mp: int
 
 :returns: a pillow image object of the tile
 :rtype: Pillow image object
 """
 # fmt: on
-def screenshot_tile(x, y):
-    return pag.screenshot(region=(x - 10.5, y - 10.5, 20, 20))
+def screenshot_tile(x_mp, y_mp):
+    return pag.screenshot(region=(x_mp - 10.5, y_mp - 10.5, 20, 20))
 
 
 # fmt: off
@@ -50,23 +50,29 @@ def identify_tile_by_colors(colors):
 
     return "redo"
 
+# Filters out minimal colors
+def reduce_sc_colors(color):
+    if color[0] > 20:
+        return True
+    return False
 
 # fmt: off
 """Gets and returns the tile type
 
-:param x: the position of the tile along the x axis
-:type x: int
-:param y: the position of the tile along the y axis
-:type y: int
+:param x_mp: the position of the mouse along the x axis
+:type x_mp: int
+:param y_mp: the position of the mouse along the y axis
+:type y_mp: int
 
 :returns: string representing tile type or int representing tile number
 :rtype: string or int
 """
 # fmt: on
-def get_tile(x, y):
-    if MOVE: pag.moveTo(x, y)
-    tile_screenshot = screenshot_tile(x, y)
+def get_tile(x_mp, y_mp):
+    if MOVE: pag.moveTo(x_mp, y_mp)
+    tile_screenshot = screenshot_tile(x_mp, y_mp)
     tile_colors = tile_screenshot.getcolors()
+    tile_colors = list(filter(reduce_sc_colors, tile_colors))
     return identify_tile_by_colors(tile_colors)
 
 for x in range(1, len(sys.argv)):
