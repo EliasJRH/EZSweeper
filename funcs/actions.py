@@ -26,7 +26,10 @@ def flag_and_ignore_adj_tiles(x_mp, y_mp, ignore):
             if tile == "grass":
                 flagged = True
                 ignore.add(
-                    (((x_mp + c[0] - START_X_MP) // 25), ((y_mp + c[1] - START_Y_MP) // 25))
+                    (
+                        ((x_mp + c[0] - START_X_MP) // 25),
+                        ((y_mp + c[1] - START_Y_MP) // 25),
+                    )
                 )
                 pag.moveTo(x_mp + c[0], y_mp + c[1])
                 pag.click(button="right")

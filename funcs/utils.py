@@ -14,7 +14,9 @@ from funcs.tile_identification import get_tile
 """
 # fmt: on
 def is_valid_mouse_pos(x_mp, y_mp):
-    return (x_mp >= START_X_MP and x_mp <= MAX_X_MP) and (y_mp >= START_Y_MP and y_mp <= MAX_Y_MP)
+    return (x_mp >= START_X_MP and x_mp <= MAX_X_MP) and (
+        y_mp >= START_Y_MP and y_mp <= MAX_Y_MP
+    )
 
 
 # fmt: off

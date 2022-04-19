@@ -25,6 +25,7 @@ def get_grass_tile_set(x_mp, y_mp):
                 grass_set.add((x_mp + c[0], y_mp + c[1]))
     return grass_set
 
+#fmt: off
 """Runs advanced searching on a tile at given mouse positions
 
 :param x_mp: the position of the mouse along the x axis
@@ -37,6 +38,7 @@ def get_grass_tile_set(x_mp, y_mp):
 :returns: true if change was made via advanced searching on tile
 :rtype: boolean
 """
+# fmt: on
 def advanced_search_tile(x_mp, y_mp, tile):
     change_made = False
 
@@ -89,10 +91,10 @@ def advanced_search_tile(x_mp, y_mp, tile):
                             for mp in dif:
                                 click_tile(mp[0], mp[1])
 
-                    # if the number of bombs in the greater tile set if larger than
-                    # the size of the difference, that means that some number of tiles is
-                    # in the shared tile set, and the remaining bombs for the larger bomb
-                    # number is in the difference
+                    # if the difference of the number of bombs in the larger tile set
+                    # and the number of bombs in the smaller tile set is equal to the length
+                    # of the difference of the grass tile set, that means all extra bombs from
+                    # the larger bomb number are in all of the tiles in the difference
                     elif larger_bomb_no - smaller_bomb_no == len(dif):
                         if len(dif) > 0:
                             change_made = True

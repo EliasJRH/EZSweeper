@@ -50,11 +50,13 @@ def identify_tile_by_colors(colors):
 
     return "redo"
 
+
 # Filters out minimal colors
 def reduce_sc_colors(color):
     if color[0] > 20:
         return True
     return False
+
 
 # fmt: off
 """Gets and returns the tile type
@@ -69,11 +71,13 @@ def reduce_sc_colors(color):
 """
 # fmt: on
 def get_tile(x_mp, y_mp):
-    if MOVE: pag.moveTo(x_mp, y_mp)
+    if MOVE:
+        pag.moveTo(x_mp, y_mp)
     tile_screenshot = screenshot_tile(x_mp, y_mp)
     tile_colors = tile_screenshot.getcolors()
     tile_colors = list(filter(reduce_sc_colors, tile_colors))
     return identify_tile_by_colors(tile_colors)
+
 
 for x in range(1, len(sys.argv)):
     cur_arg = sys.argv[x].split("=")
