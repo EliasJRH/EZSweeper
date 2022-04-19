@@ -49,7 +49,10 @@ def play():
         else:
             adv_search = False
             adv_search_flag = False
-            T = copy.deepcopy(NEW_T)
+            if NEW_T:
+                T = copy.deepcopy(NEW_T)
+            else:
+                T = copy.deepcopy(TILES)
 
         NEW_T.clear()
         new_t_set.clear()
