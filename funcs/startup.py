@@ -12,6 +12,17 @@ def open_minesweeper():
 
 # Changes difficulty to hard, might change to add more difficulties later
 def select_difficulty():
+    pag.useImageNotFoundException()
+    while True:
+        print("run")
+        try:
+            btn_pos = pag.locateOnScreen(
+                "pag_images/playbtn.png", region=(186, 290, 832, 625)
+            )
+            pag.moveTo(pag.center(btn_pos))
+            break
+        except pag.ImageNotFoundException as err:
+            continue
     pag.moveTo(500, 600)
     pag.click()
     pag.moveTo(725, 355)
