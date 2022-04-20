@@ -42,7 +42,7 @@ def identify_tile_by_colors(colors):
             return "flag"
 
     for color in colors:
-        if color[1] in GRASS:
+        if color[1] in GRASS and color[0] == 400:
             return "grass"
         # A dirt tile will only ever consist of a single color with a frequency of 400 pixels
         elif color[1] in DIRT and color[0] == 400:
@@ -73,9 +73,15 @@ def reduce_sc_colors(color):
 def get_tile(x_mp, y_mp):
     if MOVE:
         pag.moveTo(x_mp, y_mp)
-    tile_screenshot = screenshot_tile(x_mp, y_mp)
-    tile_colors = tile_screenshot.getcolors()
-    tile_colors = list(filter(reduce_sc_colors, tile_colors))
+    error = True
+    while error:
+        error = False
+        tile_screenshot = screenshot_tile(x_mp, y_mp)
+        tile_colors = tile_screenshot.getcolors()
+        tile_colors = list(filter(reduce_sc_colors, tile_colors))
+        tile = identify_tile_by_colors(tile_colors)
+        if tile == "redo":
+            error = True
     return identify_tile_by_colors(tile_colors)
 
 
