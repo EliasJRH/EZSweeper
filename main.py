@@ -92,7 +92,7 @@ def play():
                             cur_change_made = True
 
                     elif adv_search:
-                        if advanced_search_tile(x_mp, y_mp, tile):
+                        if advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore):
                             change_made = True
                             cur_change_made = True
 

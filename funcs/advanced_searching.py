@@ -1,5 +1,4 @@
-from tkinter import NUMERIC
-from consts import TO_SEARCH, NUMBERS
+from consts import ADJ_C, TO_SEARCH, NUMBERS
 from funcs.utils import *
 from funcs.actions import click_tile, flag_tile
 
@@ -25,7 +24,8 @@ def get_grass_tile_set(x_mp, y_mp):
                 grass_set.add((x_mp + c[0], y_mp + c[1]))
     return grass_set
 
-#fmt: off
+
+# fmt: off
 """Runs advanced searching on a tile at given mouse positions
 
 :param x_mp: the position of the mouse along the x axis
@@ -39,7 +39,7 @@ def get_grass_tile_set(x_mp, y_mp):
 :rtype: boolean
 """
 # fmt: on
-def advanced_search_tile(x_mp, y_mp, tile):
+def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore):
     change_made = False
 
     # Determine number of remaining bombs adjacent to tile
@@ -48,17 +48,19 @@ def advanced_search_tile(x_mp, y_mp, tile):
     cur_grass_set = get_grass_tile_set(x_mp, y_mp)
 
     # Search around tile
-    for c in TO_SEARCH:
-        if is_valid_mouse_pos(x_mp + c[0], y_mp + c[1]):
+    for c, m in zip(ADJ_C, TO_SEARCH):
+        if (x_c + c[0], y_c + c[1]) not in ignore and is_valid_mouse_pos(
+            x_mp + m[0], y_mp + m[1]
+        ):
 
             # First, get the tile, if it's a number, continue
-            adj_tile = get_tile(x_mp + c[0], y_mp + c[1])
+            adj_tile = get_tile(x_mp + m[0], y_mp + m[1])
             if adj_tile in NUMBERS:
 
                 # Get the adjacent tile info for the adjacent tile
-                adj_tile_info = count_adj_tiles(x_mp + c[0], y_mp + c[1])
+                adj_tile_info = count_adj_tiles(x_mp + m[0], y_mp + m[1])
                 adj_remaining_bombs = adj_tile - adj_tile_info[1]
-                adj_tile_grass_set = get_grass_tile_set(x_mp + c[0], y_mp + c[1])
+                adj_tile_grass_set = get_grass_tile_set(x_mp + m[0], y_mp + m[1])
 
                 # Determine, between current tile and current adjcacent tile
                 # which tile has more grass tile surrounding it, save those
