@@ -7,14 +7,18 @@ from consts import START_X_MP, START_Y_MP, TO_SEARCH
 def flag_tile(x_mp, y_mp):
     if is_valid_mouse_pos(x_mp, y_mp):
         pag.moveTo(x_mp, y_mp)
-        pag.click(button="right")
+        tile = get_tile(x_mp, y_mp)
+        if tile == "grass":
+            pag.click(button="right")
 
 
 # Clicks a single tile of a given x and y coordinate
 def click_tile(x_mp, y_mp):
     if is_valid_mouse_pos(x_mp, y_mp):
         pag.moveTo(x_mp, y_mp)
-        pag.click(button="left")
+        tile = get_tile(x_mp, y_mp)
+        if tile == "grass":
+            pag.click(button="left")
 
 
 # Flags and ignores all adjacent tiles
