@@ -39,7 +39,7 @@ def get_grass_tile_set(x_mp, y_mp):
 :rtype: boolean
 """
 # fmt: on
-def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore):
+def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs):
     change_made = False
 
     # Determine number of remaining bombs adjacent to tile
@@ -49,9 +49,13 @@ def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore):
 
     # Search around tile
     for c, m in zip(ADJ_C, TO_SEARCH):
-        if (x_c + c[0], y_c + c[1]) not in ignore and is_valid_mouse_pos(
-            x_mp + m[0], y_mp + m[1]
+        if (
+            (x_c + c[0], y_c + c[1]) not in ignore
+            and is_valid_mouse_pos(x_mp + m[0], y_mp + m[1])
+            and ((x_c, y_c), (x_c + c[0], y_c + c[1])) not in searched_pairs
+            and ((x_c + c[0], y_c + c[1]), (x_c, y_c)) not in searched_pairs
         ):
+            searched_pairs.add(((x_c, y_c), (x_c + c[0], y_c + c[1])))
 
             # First, get the tile, if it's a number, continue
             adj_tile = get_tile(x_mp + m[0], y_mp + m[1])

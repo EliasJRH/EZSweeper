@@ -29,7 +29,10 @@ def play():
     ignore = set({})
     
     # Contains all indicies to be searched again, no duplicates
-    new_t_set = set({})  
+    new_t_set = set({})
+
+    # Contains all pairs of tiles that are searched during advanced searching
+    adv_search_pairs = set({})  
     # fmt: on
 
     while T:
@@ -56,6 +59,7 @@ def play():
 
         NEW_T.clear()
         new_t_set.clear()
+        adv_search_pairs.clear()
 
         # continue with this idea, this is good
         # need to have a dual flag once for resetting searching, second for advanced searching
@@ -92,7 +96,9 @@ def play():
                             cur_change_made = True
 
                     elif adv_search:
-                        if advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore):
+                        #fmt: off
+                        if advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, adv_search_pairs):
+                        #fmt: on
                             change_made = True
                             cur_change_made = True
 
