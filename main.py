@@ -3,7 +3,7 @@ import pyautogui as pag
 from consts import *
 from funcs.startup import *
 from funcs.tile_identification import get_tile
-from funcs.actions import click_adj_tiles, flag_and_ignore_adj_tiles
+from funcs.actions import click_adj_tiles, click_tile, flag_and_ignore_adj_tiles
 from funcs.utils import *
 from funcs.advanced_searching import advanced_search_tile
 import copy
@@ -38,6 +38,7 @@ def play():
     bombs = 99
 
     while T:
+        end = False
         ind = 0
 
         # Make function that takes screenshot of board and determines upper-left most tile coordinate
@@ -93,7 +94,8 @@ def play():
                     ignore.add((x_c, y_c))
                 elif tile == "grass":
                     grass_count += 1
-
+                    if bombs == 0:
+                        click_tile(x_mp, y_mp)
                 elif tile in NUMBERS:
                     first_non_grass = True
                     adj_tiles = count_adj_tiles(x_mp, y_mp)
@@ -126,11 +128,18 @@ def play():
                                     NEW_T.append([x_c + adj_c[0], y_c + adj_c[1]])
                                     new_t_set.add((x_c + adj_c[0],y_c + adj_c[1]))
                             # fmt: on
+                elif tile == "end":
+                    end = True
+                    break
             ind += 1
             if keyboard.is_pressed("q"):
                 quit()
+
         if keyboard.is_pressed("q"):
             quit()
+
+        if end:
+            break
 
 
 def main():
