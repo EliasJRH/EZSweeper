@@ -14,7 +14,6 @@ def open_minesweeper():
 def select_difficulty():
     pag.useImageNotFoundException()
     while True:
-        print("run")
         try:
             btn_pos = pag.locateOnScreen(
                 "pag_images/playbtn.png", region=(186, 290, 832, 625)

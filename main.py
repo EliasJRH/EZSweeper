@@ -67,9 +67,18 @@ def play():
 
         change_made = False
 
+        grass_count = 0
+        first_non_grass = False
+
         while ind < len(T):
             coords = T[ind]
             x_c, y_c = coords[0], coords[1]
+            
+            if grass_count == 24 and first_non_grass:
+                break
+            elif x_c == 0:
+                grass_count = 0
+
             print(f"\r{x_c}, {y_c}", end=" ")
 
             if (x_c, y_c) not in ignore:
@@ -80,7 +89,10 @@ def play():
 
                 if tile == "dirt" or tile == "flag":
                     ignore.add((x_c, y_c))
+                elif tile == "grass":
+                    grass_count += 1
                 elif tile in NUMBERS:
+                    first_non_grass = True
                     adj_tiles = count_adj_tiles(x_mp, y_mp)
                     cur_change_made = False
                     if adj_tiles[1] == tile:
