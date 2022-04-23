@@ -35,6 +35,8 @@ def play():
     adv_search_pairs = set({})  
     # fmt: on
 
+    bombs = 99
+
     while T:
         ind = 0
 
@@ -91,6 +93,7 @@ def play():
                     ignore.add((x_c, y_c))
                 elif tile == "grass":
                     grass_count += 1
+
                 elif tile in NUMBERS:
                     first_non_grass = True
                     adj_tiles = count_adj_tiles(x_mp, y_mp)
@@ -103,13 +106,13 @@ def play():
 
                     elif adj_tiles[0] + adj_tiles[1] == tile:
                         ignore.add((x_c, y_c))
-                        if flag_and_ignore_adj_tiles(x_mp, y_mp, ignore):
+                        if flag_and_ignore_adj_tiles(x_mp, y_mp, ignore, bombs):
                             change_made = True
                             cur_change_made = True
 
                     elif adv_search:
                         #fmt: off
-                        if advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, adv_search_pairs):
+                        if advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, adv_search_pairs, bombs):
                         #fmt: on
                             change_made = True
                             cur_change_made = True
