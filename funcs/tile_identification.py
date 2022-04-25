@@ -49,7 +49,7 @@ def identify_tile_by_colors(colors):
             return "dirt"
     
     for color in colors:
-        if color[1] in END_GRASS and color[0] == 400:
+        if color[1] in END_GRASS:
             return "end"
 
     return "redo"
