@@ -13,7 +13,6 @@ def flag_tile(x_mp, y_mp, bombs):
             bombs -= 1
 
 
-
 # Clicks a single tile of a given x and y coordinate
 def click_tile(x_mp, y_mp):
     if is_valid_mouse_pos(x_mp, y_mp):
@@ -24,6 +23,7 @@ def click_tile(x_mp, y_mp):
 
 
 # Flags and ignores all adjacent tiles
+# Returns true if a tile was flagged, false otherwise
 def flag_and_ignore_adj_tiles(x_mp, y_mp, ignore, bombs):
     flagged = False
     for c in TO_SEARCH:
@@ -44,6 +44,7 @@ def flag_and_ignore_adj_tiles(x_mp, y_mp, ignore, bombs):
 
 
 # Clicks all adjacent tiles
+# Returns true if a tile was clicked, false otherwise
 def click_adj_tiles(x_mp, y_mp):
     clicked = False
     for c in TO_SEARCH:

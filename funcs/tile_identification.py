@@ -47,7 +47,7 @@ def identify_tile_by_colors(colors):
         # A dirt tile will only ever consist of a single color with a frequency of 400 pixels
         elif color[1] in DIRT and color[0] == 400:
             return "dirt"
-    
+
     for color in colors:
         if color[1] in END_GRASS:
             return "end"

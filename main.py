@@ -41,10 +41,6 @@ def play():
         end = False
         ind = 0
 
-        # Make function that takes screenshot of board and determines upper-left most tile coordinate
-        # and lower-right most tile coordinate, then find coordinates in list and create slice containing only coordinates within
-        # those two incices, always restart the search from there when you run out of tiles
-
         if not change_made and not adv_search_flag:
             adv_search_flag = True
             T = copy.deepcopy(TILES)
@@ -63,10 +59,6 @@ def play():
         NEW_T.clear()
         new_t_set.clear()
         adv_search_pairs.clear()
-
-        # continue with this idea, this is good
-        # need to have a dual flag once for resetting searching, second for advanced searching
-        # the ignore set is good, use that to make the reset search shorter
 
         change_made = False
 
