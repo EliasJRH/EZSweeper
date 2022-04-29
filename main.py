@@ -37,7 +37,7 @@ def play():
 
     bombs = 99
 
-    while T:
+    while len(ignore) != len(TILES):
         end = False
         ind = 0
 
@@ -82,7 +82,7 @@ def play():
             elif x_c == 0:
                 grass_count = 0
 
-            print(f"\r{x_c}, {y_c}", end=" ")
+            print(f"\r{x_c}, {y_c}", len(TILES), len(ignore), end=" ")
 
             if (x_c, y_c) not in ignore:
                 x_mp = START_X_MP + (25 * x_c)
