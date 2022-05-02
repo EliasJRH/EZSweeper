@@ -91,5 +91,5 @@ def get_tile(x_mp, y_mp):
 
 for x in range(1, len(sys.argv)):
     cur_arg = sys.argv[x].split("=")
-    if cur_arg[0] == "-m" and cur_arg[1] == "off":
+    if cur_arg[0] == "-m" and cur_arg[1].lower() == "off":
         MOVE = False
