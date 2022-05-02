@@ -141,7 +141,7 @@ def play():
                             cur_change_made = True
 
                     if cur_change_made:
-                        for adj_c in ADJ_C:
+                        for adj_c in ADJ_COORDS:
                             # fmt: off
                             if ((x_c + adj_c[0], y_c + adj_c[1]) not in ignore # we're not ignoring the adjacent coordinate
                                 and is_valid_mouse_pos(x_mp + (adj_c[0] * TILE_WIDTH), y_mp + (adj_c[1] * TILE_WIDTH)) # it's a valid coordinate

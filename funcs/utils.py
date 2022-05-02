@@ -1,5 +1,5 @@
 import sys
-from consts.other import TO_SEARCH
+from consts.other import TILE_WIDTH_EASY, TILE_WIDTH_MED, TILE_WIDTH_HARD, ADJ_COORDS
 from consts.mouse_positions import (
     START_X_MP_EASY,
     START_Y_MP_EASY,
@@ -17,6 +17,9 @@ from consts.mouse_positions import (
 from funcs.tile_identification import get_tile
 
 DIFFICULTY = 2
+TILE_WIDTH = TILE_WIDTH_HARD
+
+#change to use tile width based on difficulty  
 
 # fmt: off
 """Determines if mouse position is within the game border 
@@ -60,9 +63,9 @@ def is_valid_mouse_pos(x_mp, y_mp):
 def count_adj_tiles(x_mp, y_mp):
     # data = [unmarked tiles, flagged tiles]
     data = [0, 0]
-    for c in TO_SEARCH:
-        if is_valid_mouse_pos(x_mp + c[0], y_mp + c[1]):
-            tile = get_tile(x_mp + c[0], y_mp + c[1])
+    for c in ADJ_COORDS:
+        if is_valid_mouse_pos(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH)):
+            tile = get_tile(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
             if tile == "flag":
                 data[1] += 1
             elif tile == "grass":
@@ -84,7 +87,10 @@ for x in range(1, len(sys.argv)):
     if cur_arg[0] == "-d":
         if cur_arg[1].lower() == "easy":
             DIFFICULTY = 0
+            TILE_WIDTH = TILE_WIDTH_EASY
         elif cur_arg[1].lower() == "medium":
             DIFFICULTY = 1
+            TILE_WIDTH = TILE_WIDTH_MED
         else:
             DIFFICULTY = 2
+            TILE_WIDTH = TILE_WIDTH_HARD

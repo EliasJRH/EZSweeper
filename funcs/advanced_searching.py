@@ -1,4 +1,4 @@
-from consts.other import ADJ_C, TO_SEARCH, NUMBERS
+from consts.other import ADJ_COORDS, TO_SEARCH, NUMBERS
 from funcs.utils import *
 from funcs.actions import click_tile, flag_tile
 
@@ -48,7 +48,7 @@ def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs, bom
     cur_grass_set = get_grass_tile_set(x_mp, y_mp)
 
     # Search around tile
-    for c, m in zip(ADJ_C, TO_SEARCH):
+    for c, m in zip(ADJ_COORDS, TO_SEARCH):
         if (
             (x_c + c[0], y_c + c[1]) not in ignore
             and is_valid_mouse_pos(x_mp + m[0], y_mp + m[1])

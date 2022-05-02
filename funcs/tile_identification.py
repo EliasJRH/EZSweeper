@@ -1,5 +1,5 @@
 import sys
-from consts.colors import COLORS, END_GRASS, FLAG_COLORS, DIRT, GRASS
+from consts.colors import *
 import pyautogui as pag
 
 MOVE = True
@@ -17,6 +17,8 @@ MOVE = True
 """
 # fmt: on
 def screenshot_tile(x_mp, y_mp):
+    # sc = pag.screenshot(region=(x_mp - 10.5, y_mp - 10.5, 20, 20))
+    # sc.save("test_images/1.png")
     return pag.screenshot(region=(x_mp - 10.5, y_mp - 10.5, 20, 20))
 
 
@@ -49,7 +51,7 @@ def identify_tile_by_colors(colors):
             return "dirt"
 
     for color in colors:
-        if color[1] in END_GRASS:
+        if color[1] in END_GRASS or color[1] in WATER:
             return "end"
 
     return "redo"
@@ -75,14 +77,19 @@ def reduce_sc_colors(color):
 """
 # fmt: on
 def get_tile(x_mp, y_mp):
+    # print(x_mp, y_mp)
+    # input()
     if MOVE:
         pag.moveTo(x_mp, y_mp)
     error = True
     while error:
+        # print("herte")
         error = False
         tile_screenshot = screenshot_tile(x_mp, y_mp)
+        # input()
         tile_colors = tile_screenshot.getcolors()
         tile_colors = list(filter(reduce_sc_colors, tile_colors))
+        # print(tile_colors)
         tile = identify_tile_by_colors(tile_colors)
         if tile == "redo":
             error = True

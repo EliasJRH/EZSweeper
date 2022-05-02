@@ -3,9 +3,9 @@ import pyautogui as pag
 from funcs.utils import is_valid_mouse_pos
 from funcs.tile_identification import get_tile
 from consts.mouse_positions import START_X_MP, START_Y_MP
-from consts.other import TO_SEARCH
+from consts.other import TO_SEARCH, TILE_WIDTH_EASY, TILE_WIDTH_MED, TILE_WIDTH_HARD, ADJ_COORDS
 
-DIFFICULTY = 2
+TILE_WIDTH = TILE_WIDTH_HARD
 
 # Flags a single tile of a given x and y coordinate
 def flag_tile(x_mp, y_mp, bombs):
@@ -30,18 +30,18 @@ def click_tile(x_mp, y_mp):
 # Returns true if a tile was flagged, false otherwise
 def flag_and_ignore_adj_tiles(x_mp, y_mp, ignore, bombs):
     flagged = False
-    for c in TO_SEARCH:
-        if is_valid_mouse_pos(x_mp + c[0], y_mp + c[1]):
-            tile = get_tile(x_mp + c[0], y_mp + c[1])
+    for c in ADJ_COORDS:
+        if is_valid_mouse_pos(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH)):
+            tile = get_tile(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
             if tile == "grass":
                 flagged = True
                 ignore.add(
                     (
-                        ((x_mp + c[0] - START_X_MP) // 25),
-                        ((y_mp + c[1] - START_Y_MP) // 25),
+                        ((x_mp + (c[0] * TILE_WIDTH) - START_X_MP) // TILE_WIDTH),
+                        ((y_mp + (c[1] * TILE_WIDTH) - START_Y_MP) // TILE_WIDTH),
                     )
                 )
-                pag.moveTo(x_mp + c[0], y_mp + c[1])
+                pag.moveTo(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
                 pag.click(button="right")
                 bombs -= 1
     return flagged
@@ -51,12 +51,12 @@ def flag_and_ignore_adj_tiles(x_mp, y_mp, ignore, bombs):
 # Returns true if a tile was clicked, false otherwise
 def click_adj_tiles(x_mp, y_mp):
     clicked = False
-    for c in TO_SEARCH:
-        if is_valid_mouse_pos(x_mp + c[0], y_mp + c[1]):
-            tile = get_tile(x_mp + c[0], y_mp + c[1])
+    for c in ADJ_COORDS:
+        if is_valid_mouse_pos(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH)):
+            tile = get_tile(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
             if tile == "grass":
                 clicked = True
-                pag.moveTo(x_mp + c[0], y_mp + c[1])
+                pag.moveTo(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
                 pag.click(button="left")
     return clicked
 
@@ -65,8 +65,8 @@ for x in range(1, len(sys.argv)):
     cur_arg = sys.argv[x].split("=")
     if cur_arg[0] == "-d":
         if cur_arg[1].lower() == "easy":
-            DIFFICULTY = 0
+            TILE_WIDTH = TILE_WIDTH_EASY
         elif cur_arg[1].lower() == "medium":
-            DIFFICULTY = 1
+            TILE_WIDTH = TILE_WIDTH_MED
         else:
-            DIFFICULTY = 2
+            TILE_WIDTH = TILE_WIDTH_HARD
