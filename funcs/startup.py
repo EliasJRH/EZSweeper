@@ -4,14 +4,21 @@ import pyautogui as pag
 import time
 import webbrowser
 
-from consts import CENTER_X_MP_EASY, CENTER_X_MP_HARD, CENTER_X_MP_MED, CENTER_Y_MP_EASY, CENTER_Y_MP_HARD, CENTER_Y_MP_MED
+from consts.mouse_positions import (
+    CENTER_X_MP_EASY,
+    CENTER_X_MP_HARD,
+    CENTER_X_MP_MED,
+    CENTER_Y_MP_EASY,
+    CENTER_Y_MP_HARD,
+    CENTER_Y_MP_MED,
+)
 
 DIFFICULTY = 2
 
 difficulty_imgs = {
-    0 : "pag_images/easybtn.png",
-    1 : "pag_images/medbtn.png",
-    2 : "pag_images/hardbtn.png"
+    0: "pag_images/easybtn.png",
+    1: "pag_images/medbtn.png",
+    2: "pag_images/hardbtn.png",
 }
 
 # Functions related to initially starting the game
@@ -38,13 +45,15 @@ def select_difficulty():
 
     while True:
         try:
-            btn_pos = pag.locateOnScreen("pag_images/diffbtn.png", region=(560, 0, 300, 500))
+            btn_pos = pag.locateOnScreen(
+                "pag_images/diffbtn.png", region=(560, 0, 300, 500)
+            )
             pag.moveTo(pag.center(btn_pos))
             pag.click()
             break
         except pag.ImageNotFoundException as err:
             continue
-    
+
     btn_img = difficulty_imgs[DIFFICULTY]
     while True:
         try:
@@ -65,6 +74,7 @@ def start_game():
     else:
         pag.moveTo(CENTER_X_MP_HARD, CENTER_Y_MP_HARD)
     pag.click()
+
 
 for x in range(1, len(sys.argv)):
     cur_arg = sys.argv[x].split("=")

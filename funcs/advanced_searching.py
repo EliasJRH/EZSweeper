@@ -1,4 +1,4 @@
-from consts import ADJ_C, TO_SEARCH, NUMBERS
+from consts.other import ADJ_C, TO_SEARCH, NUMBERS
 from funcs.utils import *
 from funcs.actions import click_tile, flag_tile
 

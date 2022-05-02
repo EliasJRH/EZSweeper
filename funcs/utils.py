@@ -1,5 +1,22 @@
-from consts import START_X_MP, START_Y_MP, MAX_X_MP, MAX_Y_MP, TO_SEARCH
+import sys
+from consts.other import TO_SEARCH
+from consts.mouse_positions import (
+    START_X_MP_EASY,
+    START_Y_MP_EASY,
+    MAX_X_MP_EASY,
+    MAX_Y_MP_EASY,
+    START_X_MP_MED,
+    START_Y_MP_MED,
+    MAX_X_MP_MED,
+    MAX_Y_MP_MED,
+    START_X_MP_HARD,
+    START_Y_MP_HARD,
+    MAX_X_MP_HARD,
+    MAX_Y_MP_HARD,
+)
 from funcs.tile_identification import get_tile
+
+DIFFICULTY = 2
 
 # fmt: off
 """Determines if mouse position is within the game border 
@@ -14,9 +31,18 @@ from funcs.tile_identification import get_tile
 """
 # fmt: on
 def is_valid_mouse_pos(x_mp, y_mp):
-    return (x_mp >= START_X_MP and x_mp <= MAX_X_MP) and (
-        y_mp >= START_Y_MP and y_mp <= MAX_Y_MP
-    )
+    if DIFFICULTY == 0:
+        return (x_mp >= START_X_MP_EASY and x_mp <= MAX_X_MP_EASY) and (
+            y_mp >= START_Y_MP_EASY and y_mp <= MAX_Y_MP_EASY
+        )
+    elif DIFFICULTY == 1:
+        return (x_mp >= START_X_MP_MED and x_mp <= MAX_X_MP_MED) and (
+            y_mp >= START_Y_MP_MED and y_mp <= MAX_Y_MP_MED
+        )
+    else:
+        return (x_mp >= START_X_MP_HARD and x_mp <= MAX_X_MP_HARD) and (
+            y_mp >= START_Y_MP_HARD and y_mp <= MAX_Y_MP_HARD
+        )
 
 
 # fmt: off
@@ -42,3 +68,23 @@ def count_adj_tiles(x_mp, y_mp):
             elif tile == "grass":
                 data[0] += 1
     return data
+
+
+def generate_tile_list():
+    if DIFFICULTY == 0:
+        return [[x, y] for y in range(8) for x in range(10)]
+    elif DIFFICULTY == 1:
+        return [[x, y] for y in range(14) for x in range(18)]
+    else:
+        return [[x, y] for y in range(20) for x in range(24)]
+
+
+for x in range(1, len(sys.argv)):
+    cur_arg = sys.argv[x].split("=")
+    if cur_arg[0] == "-d":
+        if cur_arg[1].lower() == "easy":
+            DIFFICULTY = 0
+        elif cur_arg[1].lower() == "medium":
+            DIFFICULTY = 1
+        else:
+            DIFFICULTY = 2

@@ -1,7 +1,11 @@
+import sys
 import pyautogui as pag
 from funcs.utils import is_valid_mouse_pos
 from funcs.tile_identification import get_tile
-from consts import START_X_MP, START_Y_MP, TO_SEARCH
+from consts.mouse_positions import START_X_MP, START_Y_MP
+from consts.other import TO_SEARCH
+
+DIFFICULTY = 2
 
 # Flags a single tile of a given x and y coordinate
 def flag_tile(x_mp, y_mp, bombs):
@@ -55,3 +59,14 @@ def click_adj_tiles(x_mp, y_mp):
                 pag.moveTo(x_mp + c[0], y_mp + c[1])
                 pag.click(button="left")
     return clicked
+
+
+for x in range(1, len(sys.argv)):
+    cur_arg = sys.argv[x].split("=")
+    if cur_arg[0] == "-d":
+        if cur_arg[1].lower() == "easy":
+            DIFFICULTY = 0
+        elif cur_arg[1].lower() == "medium":
+            DIFFICULTY = 1
+        else:
+            DIFFICULTY = 2
