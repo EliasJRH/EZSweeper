@@ -1,5 +1,5 @@
 import sys
-from consts.other import COLORS, END_GRASS, FLAG_COLORS, DIRT, GRASS
+from consts.colors import COLORS, END_GRASS, FLAG_COLORS, DIRT, GRASS
 import pyautogui as pag
 
 MOVE = True
