@@ -17,8 +17,6 @@ MOVE = True
 """
 # fmt: on
 def screenshot_tile(x_mp, y_mp):
-    # sc = pag.screenshot(region=(x_mp - 10.5, y_mp - 10.5, 20, 20))
-    # sc.save("test_images/1.png")
     return pag.screenshot(region=(x_mp - 10.5, y_mp - 10.5, 20, 20))
 
 
