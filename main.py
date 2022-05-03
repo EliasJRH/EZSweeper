@@ -66,7 +66,7 @@ def play():
     adv_search_pairs = set({})  
     # fmt: on
 
-    while len(ignore) != len(TILE_COORDS):
+    while len(ignore) < len(TILE_COORDS):
         end = False
         ind = 0
 
@@ -103,7 +103,7 @@ def play():
             elif x_c == 0:
                 grass_count = 0
 
-            print(f"\r{x_c}, {y_c}", len(TILE_COORDS), len(ignore), end=" ")
+            print(f"\r{x_c}, {y_c}", f"bombs: {bombs}", len(TILE_COORDS), len(ignore), end=" ")
 
             if (x_c, y_c) not in ignore:
                 x_mp = START_X_MP + (TILE_WIDTH * x_c)
@@ -129,9 +129,12 @@ def play():
 
                     elif adj_tiles[0] + adj_tiles[1] == tile:
                         ignore.add((x_c, y_c))
-                        if flag_and_ignore_adj_tiles(x_mp, y_mp, ignore, bombs):
+                        flagged, bombs_flagged = flag_and_ignore_adj_tiles(x_mp, y_mp, ignore)
+                        if flagged:
                             change_made = True
                             cur_change_made = True
+                        if bombs_flagged > 0:
+                            bombs -= bombs_flagged
 
                     elif adv_search:
                         #fmt: off
