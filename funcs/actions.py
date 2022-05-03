@@ -2,13 +2,19 @@ import sys
 import pyautogui as pag
 from funcs.utils import is_valid_mouse_pos
 from funcs.tile_identification import get_tile
-from consts.mouse_positions import START_X_MP_EASY, START_Y_MP_EASY, START_X_MP_MED, START_Y_MP_MED, START_X_MP_HARD, START_Y_MP_HARD
+from consts.mouse_positions import (
+    START_X_MP_EASY,
+    START_Y_MP_EASY,
+    START_X_MP_MED,
+    START_Y_MP_MED,
+    START_X_MP_HARD,
+    START_Y_MP_HARD,
+)
 from consts.other import TILE_WIDTH_EASY, TILE_WIDTH_MED, TILE_WIDTH_HARD, ADJ_COORDS
 
 TILE_WIDTH = TILE_WIDTH_HARD
 START_X_MP = START_X_MP_HARD
 START_Y_MP = START_Y_MP_HARD
-
 
 # Flags a single tile of a given x and y coordinate
 def flag_tile(x_mp, y_mp, bombs):
@@ -45,7 +51,6 @@ def flag_and_ignore_adj_tiles(x_mp, y_mp, ignore):
                         ((y_mp + (c[1] * TILE_WIDTH) - START_Y_MP) // TILE_WIDTH),
                     )
                 )
-                print(f"ignoring {((x_mp + (c[0] * TILE_WIDTH) - START_X_MP) // TILE_WIDTH)}, {((y_mp + (c[1] * TILE_WIDTH) - START_Y_MP) // TILE_WIDTH)} because flag two from {((x_mp - START_X_MP) // TILE_WIDTH)}, {((y_mp - START_Y_MP) // TILE_WIDTH)}")
                 pag.moveTo(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
                 pag.click(button="right")
                 bombs_flagged += 1
