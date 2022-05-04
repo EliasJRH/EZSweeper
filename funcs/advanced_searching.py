@@ -1,7 +1,9 @@
-from consts.other import ADJ_COORDS, TO_SEARCH, NUMBERS
+from consts.other import ADJ_COORDS, NUMBERS
 from funcs.utils import *
 from funcs.actions import click_tile, flag_tile
+from consts.other import TILE_WIDTH_EASY, TILE_WIDTH_MED, TILE_WIDTH_HARD 
 
+TILE_WIDTH = TILE_WIDTH_HARD
 
 # fmt: off
 """Gets and returns of set of all grass tiles around a given tile
@@ -17,11 +19,11 @@ from funcs.actions import click_tile, flag_tile
 # fmt: on
 def get_grass_tile_set(x_mp, y_mp):
     grass_set = set()
-    for c in TO_SEARCH:
-        if is_valid_mouse_pos(x_mp + c[0], y_mp + c[1]):
-            tile = get_tile(x_mp + c[0], y_mp + c[1])
+    for c in ADJ_COORDS:
+        if is_valid_mouse_pos(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH)):
+            tile = get_tile(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
             if tile == "grass":
-                grass_set.add((x_mp + c[0], y_mp + c[1]))
+                grass_set.add((x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH)))
     return grass_set
 
 
@@ -48,23 +50,23 @@ def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs, bom
     cur_grass_set = get_grass_tile_set(x_mp, y_mp)
 
     # Search around tile
-    for c, m in zip(ADJ_COORDS, TO_SEARCH):
+    for c in ADJ_COORDS:
         if (
             (x_c + c[0], y_c + c[1]) not in ignore
-            and is_valid_mouse_pos(x_mp + m[0], y_mp + m[1])
+            and is_valid_mouse_pos(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
             and ((x_c, y_c), (x_c + c[0], y_c + c[1])) not in searched_pairs
             and ((x_c + c[0], y_c + c[1]), (x_c, y_c)) not in searched_pairs
         ):
             searched_pairs.add(((x_c, y_c), (x_c + c[0], y_c + c[1])))
 
             # First, get the tile, if it's a number, continue
-            adj_tile = get_tile(x_mp + m[0], y_mp + m[1])
+            adj_tile = get_tile(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
             if adj_tile in NUMBERS:
 
                 # Get the adjacent tile info for the adjacent tile
-                adj_tile_info = count_adj_tiles(x_mp + m[0], y_mp + m[1])
+                adj_tile_info = count_adj_tiles(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
                 adj_remaining_bombs = adj_tile - adj_tile_info[1]
-                adj_tile_grass_set = get_grass_tile_set(x_mp + m[0], y_mp + m[1])
+                adj_tile_grass_set = get_grass_tile_set(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
 
                 # Determine, between current tile and current adjcacent tile
                 # which tile has more grass tile surrounding it, save those
@@ -108,3 +110,13 @@ def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs, bom
                                 flag_tile(mp[0], mp[1], bombs)
 
     return change_made
+
+for x in range(1, len(sys.argv)):
+    cur_arg = sys.argv[x].split("=")
+    if cur_arg[0] == "-d":
+        if cur_arg[1].lower() == "easy":
+            TILE_WIDTH = TILE_WIDTH_EASY
+        elif cur_arg[1].lower() == "medium":
+            TILE_WIDTH = TILE_WIDTH_MED
+        else:
+            TILE_WIDTH = TILE_WIDTH_HARD
