@@ -1,7 +1,7 @@
 from consts.other import ADJ_COORDS, NUMBERS
 from funcs.utils import *
 from funcs.actions import click_tile, flag_tile
-from consts.other import TILE_WIDTH_EASY, TILE_WIDTH_MED, TILE_WIDTH_HARD 
+from consts.other import TILE_WIDTH_EASY, TILE_WIDTH_MED, TILE_WIDTH_HARD
 
 TILE_WIDTH = TILE_WIDTH_HARD
 
@@ -64,9 +64,13 @@ def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs, bom
             if adj_tile in NUMBERS:
 
                 # Get the adjacent tile info for the adjacent tile
-                adj_tile_info = count_adj_tiles(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
+                adj_tile_info = count_adj_tiles(
+                    x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH)
+                )
                 adj_remaining_bombs = adj_tile - adj_tile_info[1]
-                adj_tile_grass_set = get_grass_tile_set(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
+                adj_tile_grass_set = get_grass_tile_set(
+                    x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH)
+                )
 
                 # Determine, between current tile and current adjcacent tile
                 # which tile has more grass tile surrounding it, save those
@@ -110,6 +114,7 @@ def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs, bom
                                 flag_tile(mp[0], mp[1], bombs)
 
     return change_made
+
 
 for x in range(1, len(sys.argv)):
     cur_arg = sys.argv[x].split("=")

@@ -19,8 +19,6 @@ from funcs.tile_identification import get_tile
 DIFFICULTY = 2
 TILE_WIDTH = TILE_WIDTH_HARD
 
-#change to use tile width based on difficulty  
-
 # fmt: off
 """Determines if mouse position is within the game border 
 
