@@ -75,19 +75,14 @@ def reduce_sc_colors(color):
 """
 # fmt: on
 def get_tile(x_mp, y_mp):
-    # print(x_mp, y_mp)
-    # input()
     if MOVE:
         pag.moveTo(x_mp, y_mp)
     error = True
     while error:
-        # print("herte")
         error = False
         tile_screenshot = screenshot_tile(x_mp, y_mp)
-        # input()
         tile_colors = tile_screenshot.getcolors()
         tile_colors = list(filter(reduce_sc_colors, tile_colors))
-        # print(tile_colors)
         tile = identify_tile_by_colors(tile_colors)
         if tile == "redo":
             error = True
