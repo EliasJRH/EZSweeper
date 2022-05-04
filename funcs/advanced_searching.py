@@ -41,7 +41,8 @@ def get_grass_tile_set(x_mp, y_mp):
 :rtype: boolean
 """
 # fmt: on
-def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs, bombs):
+def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs):
+    bombs_flagged = 0
     change_made = False
 
     # Determine number of remaining bombs adjacent to tile
@@ -111,9 +112,9 @@ def advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, searched_pairs, bom
                         if len(dif) > 0:
                             change_made = True
                             for mp in dif:
-                                flag_tile(mp[0], mp[1], bombs)
+                                bombs_flagged += flag_tile(mp[0], mp[1])
 
-    return change_made
+    return change_made, bombs_flagged
 
 
 for x in range(1, len(sys.argv)):

@@ -17,13 +17,14 @@ START_X_MP = START_X_MP_HARD
 START_Y_MP = START_Y_MP_HARD
 
 # Flags a single tile of a given x and y coordinate
-def flag_tile(x_mp, y_mp, bombs):
+def flag_tile(x_mp, y_mp):
     if is_valid_mouse_pos(x_mp, y_mp):
         pag.moveTo(x_mp, y_mp)
         tile = get_tile(x_mp, y_mp)
         if tile == "grass":
             pag.click(button="right")
-            bombs -= 1
+            return 1
+    return 0
 
 
 # Clicks a single tile of a given x and y coordinate

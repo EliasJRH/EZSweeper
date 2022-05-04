@@ -97,13 +97,19 @@ def play():
         while ind < len(T):
             coords = T[ind]
             x_c, y_c = coords[0], coords[1]
-            
+
             if grass_count == grass_length and first_non_grass:
                 break
             elif x_c == 0:
                 grass_count = 0
 
-            print(f"\r{x_c}, {y_c}", f"bombs: {bombs}", len(TILE_COORDS), len(ignore), end=" ")
+            print(
+                f"\r{x_c}, {y_c}",
+                f"bombs: {bombs}",
+                len(TILE_COORDS),
+                len(ignore),
+                end=" ",
+            )
 
             if (x_c, y_c) not in ignore:
                 x_mp = START_X_MP + (TILE_WIDTH * x_c)
@@ -129,7 +135,9 @@ def play():
 
                     elif adj_tiles[0] + adj_tiles[1] == tile:
                         ignore.add((x_c, y_c))
-                        flagged, bombs_flagged = flag_and_ignore_adj_tiles(x_mp, y_mp, ignore)
+                        flagged, bombs_flagged = flag_and_ignore_adj_tiles(
+                            x_mp, y_mp, ignore
+                        )
                         if flagged:
                             change_made = True
                             cur_change_made = True
@@ -137,11 +145,14 @@ def play():
                             bombs -= bombs_flagged
 
                     elif adv_search:
-                        #fmt: off
-                        if advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, adv_search_pairs, bombs):
-                        #fmt: on
+                        # fmt: off
+                        change_made_adv, bombs_flagged = advanced_search_tile(x_mp, y_mp, tile, x_c, y_c, ignore, adv_search_pairs)
+                        # fmt: on
+                        if change_made_adv:
                             change_made = True
                             cur_change_made = True
+                        if bombs_flagged > 0:
+                            bombs -= bombs_flagged
 
                     if cur_change_made:
                         for adj_c in ADJ_COORDS:
