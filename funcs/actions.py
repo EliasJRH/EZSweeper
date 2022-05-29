@@ -39,13 +39,13 @@ def click_tile(x_mp, y_mp):
 # Flags and ignores all adjacent tiles
 # Returns true if a tile was flagged, false otherwise
 def flag_and_ignore_adj_tiles(x_mp, y_mp, ignore):
-    flagged = False
+    # flagged = False
     bombs_flagged = 0
     for c in ADJ_COORDS:
         if is_valid_mouse_pos(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH)):
             tile = get_tile(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
             if tile == "grass":
-                flagged = True
+                # flagged = True
                 ignore.add(
                     (
                         ((x_mp + (c[0] * TILE_WIDTH) - START_X_MP) // TILE_WIDTH),
@@ -55,7 +55,7 @@ def flag_and_ignore_adj_tiles(x_mp, y_mp, ignore):
                 pag.moveTo(x_mp + (c[0] * TILE_WIDTH), y_mp + (c[1] * TILE_WIDTH))
                 pag.click(button="right")
                 bombs_flagged += 1
-    return flagged, bombs_flagged
+    return bombs_flagged
 
 
 # Clicks all adjacent tiles
