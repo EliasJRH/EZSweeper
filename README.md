@@ -34,4 +34,4 @@ If you want to make any changes to the bot for yourself, you can easily format f
 `pipenv run format`
 
 
-\* Unless there is demand, I won't be configuring this to work with other resolutions at the moment. It seems like I'd have to test and get positions for many different buttons which is quite tedious
+\* This will only work on monitors with a 1920 x 1080 resolution
