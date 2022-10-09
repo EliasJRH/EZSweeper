@@ -1,7 +1,5 @@
 # EZSweeper
 
-**This project is still a work in progress**
-
 A side project of mine. A bot that plays Google minesweeper.
 
 Made using [pyautogui](https://pyautogui.readthedocs.io/en/latest/install.html)
