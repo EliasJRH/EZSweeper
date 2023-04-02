@@ -115,9 +115,10 @@ def play():
                 grass_count = 0
 
             print(
-                f"\r{x_c}, {y_c}" "bombs: {bombs}",
+                f"\r{x_c}, {y_c}",
                 len(TILE_COORDS),
                 len(ignore),
+                bombs,
                 end=" ",
             )
 

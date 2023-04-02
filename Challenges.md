@@ -15,15 +15,13 @@ Ok, now we can move the mouse and we know where to move it, what next? Well we n
 3. The color of the number (or any pixel shape really) fades near the edges so results weren't always accurate
 
 
-Clearly there's a lot that can be improved upon here, so here some solutions:
+Clearly there's a lot that can be improved upon here, so here are some solutions:
 1. Instead of taking a screenshot of the entire screen, I can take a screenshot of just the one square using `pyautogui.screenshot(region=)`. Now we're not grabbing the entire screen
-2. Once I have this small screen shot, I can use the `PIL.image.getcolors()` function to obtain an unsorted list of every distinct color in screenshot along with their pixel frequency (which would be at max 23x23 pixels wide, not very big relatively speaking).
+2. Once I have this small screen shot, I can use the `PIL.image.getcolors()` function to obtain an unsorted list of every distinct color in the screenshot along with their pixel frequency (which would be at max 20x20 pixels wide, not very big relatively speaking).
 3. Once I get the colors, I can filter out the faded edges of the number by removing the lower pixel frequencies to get the most dominate colors for each tile. This would either be just the background color, just the grass color or a combination of background and number.
 4. After that, I wrote a small function to determine the nature of the tile, and now we have tile recognition!
 
 After all this work, I don't forsee any issues that would completely break anything.
-
-
 
 ## Difficult numbers
 I'm lazy and don't want to make a replica of Google minesweeper, but I also need to ensure that the mouse is able to detect every number, even the ones that don't show up very often like 6, 7 and 8. However, it's very hard to test for something that happens very rarely that you also can't control. 
@@ -64,6 +62,39 @@ But obviously this bot needs to be blazing fast (🚀) so I couldn't sacrifice s
 
 Why were they getting misidentified, why was this only happening in some cases and what does the speed (🚀) of the bot have to do with anything? When you click a tile to remove it in Google minesweeper, a little ~~infuriating~~ animation of the tile flying away plays. As you might've guessed it, as the bot moves from clicking a tile to screenshotting the next one, this animation would still be playing so instead of the screenshot consisting only of a tile, it would consist of a little green square obscuring a tile. This, in turn, would mess up the colors found in that screen shot and because the only known color in the messed up screenshot is dirt, that's all it recoginized, returned and then ignored.
 
-Luckily, after several days of debugging, the fix for this was simply. Since a dirt tile is composed of a single color and each screenshot contains exactly 400 pixels (20 x 20), I could simply check if the color of a tile was a dirt tile *and* that color appeared in 400 pixels. If it didn't well we treat the same way as grass and re-vist it later. Point being, now no tiles are getting ignored prematurely. 
+Luckily, after several days of debugging, the fix for this was simple. Since a dirt tile is composed of a single color and each screenshot contains exactly 400 pixels (20 x 20), I could simply check if the color of a tile was a dirt tile *and* that color appeared in 400 pixels. If it didn't well we treat the same way as grass and re-vist it later. Point being, now no tiles are getting ignored prematurely. 
 
 *sigh*
+
+## "Advanced searching"
+Forewarning, I'll be using the term "advanced searching" because I can't think of a term to describe it better, but essentially what is meant by this term is an algorithm for playing the game that may not be immediately obvious to those who don't play minesweeper alot. 
+
+So what do I mean by "advanced searching"?
+
+Consider the following scenario
+
+![](doc_images/extraempty.png)
+
+We can see that the 1 in the bottom corner has one mine adjacent to it remaining and the 3 above it also has one mine adjacent to it remaining. Playing as you would normally, it might seem like there are no moves to make here, nothing is outright obvious. However, let's look at this a bit. 
+
+The 1 in the bottom corner has exactly one mine in the two squares next to it. The 3 above it has exactly one mine in the 3 squares next to it
+
+![](doc_images/extraemptyxs.png)
+
+If one mine has to be in the two tiles marked with a blue x and one mine has to be in the three tiles marked with a red x, then it is impossible for the mine to be in the tile in the top corner. Think of it as just being extra, if we can get rid of those extra tiles, we can uncover more information about the board which might in turn, allow us to progress further along the board then we could. 
+
+Advanced searching techniques like this are pretty much necesarry to beat Google minesweeper on hard difficulty. Rarely have I played games where I've never had to use them and won.
+
+These kinds of techniques can also be applied to find mines where it might not be obvious, consider this scenario
+
+![](doc_images/adv_mines.png)
+
+The two in the bottom right corner has one adjacent mine remaining in the two tiles next to it. The two above it has two adjacent mines remaining in the three tiles next to it. 
+
+There's definitely a mine somewhere, but it's may not be entirely obvious, again we take a closer look
+
+![](doc_images/adv_minesxs.png)
+
+The two in the bottom left corner must have exactly one mine in the tiles marked with a red x. The two above it must have exactly two mines in the tiles marked with a blue x. Since we know that there is exactly one mine in the two tiles marked with a red x and exactly two mines in the tiles marked with a blue x, then there must be exactly one mine in the tile marked only with a blue x.
+
+With both of these strategies, you can win pretty much any game that doesn't require guessing.
